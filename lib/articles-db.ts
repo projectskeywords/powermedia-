@@ -16,6 +16,7 @@ const UPSTASH_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN!
 const KEY = 'articles'
 
 async function redisGet(key: string): Promise<string | null> {
+  if (!UPSTASH_URL || !UPSTASH_TOKEN) return null
   const res = await fetch(`${UPSTASH_URL}/get/${key}`, {
     headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
     cache: 'no-store',
@@ -25,6 +26,7 @@ async function redisGet(key: string): Promise<string | null> {
 }
 
 async function redisSet(key: string, value: string): Promise<void> {
+  if (!UPSTASH_URL || !UPSTASH_TOKEN) return
   await fetch(`${UPSTASH_URL}/set/${key}`, {
     method: 'POST',
     headers: {
