@@ -6,6 +6,9 @@ import { isValidLang, type Lang } from '@/lib/i18n'
 import { getArticleBySlug, getAllArticles } from '@/lib/articles-db'
 import ArticleLangSwitcher from '@/components/blog/ArticleLangSwitcher'
 
+// Dynamic — articles are stored in Redis and change at runtime
+export const dynamic = 'force-dynamic'
+
 interface PageProps {
   params: Promise<{ lang: string; slug: string }>
 }
@@ -33,18 +36,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-export async function generateStaticParams() {
-  const articles = await getAllArticles()
-  const params: { lang: string; slug: string }[] = []
-
-  for (const article of articles) {
-    for (const lang of ['ro', 'ru', 'en'] as const) {
-      params.push({ lang, slug: article[lang].slug })
-    }
-  }
-
-  return params
-}
 
 function PhotoCredit({ url, name, profileUrl }: { url: string; name: string; profileUrl: string }) {
   return (
