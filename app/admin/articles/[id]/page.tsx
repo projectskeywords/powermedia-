@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic'
 
 export default async function EditArticlePage({ params }: PageProps) {
   const { id } = await params
-  const articles = getAllArticles()
+  const articles = await getAllArticles()
   const article = articles.find((a) => a.id === id)
 
   if (!article) notFound()

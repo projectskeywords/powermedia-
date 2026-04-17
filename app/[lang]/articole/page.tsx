@@ -18,7 +18,7 @@ export default async function ArticolePage({ params }: PageProps) {
   if (!isValidLang(lang)) notFound()
 
   const t = getMessages(lang as Lang)
-  const articles = getAllArticles()
+  const articles = await getAllArticles()
 
   return (
     <main className="bg-black min-h-screen">

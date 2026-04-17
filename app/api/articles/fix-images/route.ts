@@ -6,7 +6,7 @@ import { searchImages } from '@/lib/unsplash'
 // Call: POST /api/articles/fix-images
 export async function POST() {
   try {
-    const articles = getAllArticles()
+    const articles = await getAllArticles()
     const fixed: string[] = []
 
     for (const article of articles) {
@@ -15,7 +15,7 @@ export async function POST() {
         const images = await searchImages(query, 3).catch(() => [])
 
         if (images.length > 0) {
-          updateArticle(article.id, { images })
+          await updateArticle(article.id, { images })
           fixed.push(article.id)
         }
       }

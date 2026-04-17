@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
     const images = await searchImages(simpleQuery, 3).catch(() => [])
 
     // Get related articles for interlinking
-    const existingArticles = getAllArticles().slice(0, 5).map((a) => ({
+    const existingArticles = (await getAllArticles()).slice(0, 5).map((a) => ({
       ro: { slug: a.ro.slug, title: a.ro.title },
       ru: { slug: a.ru.slug, title: a.ru.title },
       en: { slug: a.en.slug, title: a.en.title },
@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Persist the article
-    const saved = saveArticle({ topic: topic.trim(), ro: article.ro, ru: article.ru, en: article.en, images })
+    const saved = await saveArticle({ topic: topic.trim(), ro: article.ro, ru: article.ru, en: article.en, images })
 
     // Submit article URLs to IndexNow for immediate search engine indexing
     submitToIndexNow(saved.ro.slug, saved.ru.slug, saved.en.slug).catch(() => {

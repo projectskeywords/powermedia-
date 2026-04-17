@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { lang, slug } = await params
   if (!isValidLang(lang)) return {}
 
-  const article = getArticleBySlug(slug, lang as Lang)
+  const article = await getArticleBySlug(slug, lang as Lang)
   if (!article) return {}
 
   const version = article[lang as Lang]
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export async function generateStaticParams() {
-  const articles = getAllArticles()
+  const articles = await getAllArticles()
   const params: { lang: string; slug: string }[] = []
 
   for (const article of articles) {
@@ -68,7 +68,7 @@ export default async function ArticleDetailPage({ params }: PageProps) {
   const { lang, slug } = await params
   if (!isValidLang(lang)) notFound()
 
-  const article = getArticleBySlug(slug, lang as Lang)
+  const article = await getArticleBySlug(slug, lang as Lang)
   if (!article) notFound()
 
   const version = article[lang as Lang]

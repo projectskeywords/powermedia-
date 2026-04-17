@@ -1,5 +1,3 @@
-import fs from 'fs'
-import path from 'path'
 import { ArticleVersion } from './gemini'
 import { UnsplashImage } from './unsplash'
 
@@ -13,47 +11,78 @@ export interface StoredArticle {
   images: UnsplashImage[]
 }
 
-const DB_PATH = path.join(process.cwd(), 'data', 'articles.json')
+const UPSTASH_URL = process.env.UPSTASH_REDIS_REST_URL!
+const UPSTASH_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN!
+const KEY = 'articles'
 
-function ensureDb(): void {
-  const dir = path.dirname(DB_PATH)
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true })
-  if (!fs.existsSync(DB_PATH)) fs.writeFileSync(DB_PATH, '[]', 'utf-8')
+async function redisGet(key: string): Promise<string | null> {
+  const res = await fetch(`${UPSTASH_URL}/get/${key}`, {
+    headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
+    cache: 'no-store',
+  })
+  const data = await res.json() as { result: string | null }
+  return data.result
 }
 
-export function getAllArticles(): StoredArticle[] {
-  ensureDb()
-  const raw = fs.readFileSync(DB_PATH, 'utf-8')
-  return JSON.parse(raw) as StoredArticle[]
+async function redisSet(key: string, value: string): Promise<void> {
+  await fetch(`${UPSTASH_URL}/set/${key}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${UPSTASH_TOKEN}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(value),
+  })
 }
 
-export function getArticleBySlug(
+export async function getAllArticles(): Promise<StoredArticle[]> {
+  const raw = await redisGet(KEY)
+  if (!raw) return []
+  try {
+    return JSON.parse(raw) as StoredArticle[]
+  } catch {
+    return []
+  }
+}
+
+export async function getArticleBySlug(
   slug: string,
   lang: 'ro' | 'ru' | 'en'
-): StoredArticle | null {
-  const articles = getAllArticles()
+): Promise<StoredArticle | null> {
+  const articles = await getAllArticles()
   return articles.find((a) => a[lang].slug === slug) ?? null
 }
 
-export function saveArticle(article: Omit<StoredArticle, 'id' | 'createdAt'>): StoredArticle {
-  ensureDb()
-  const articles = getAllArticles()
+export async function saveArticle(
+  article: Omit<StoredArticle, 'id' | 'createdAt'>
+): Promise<StoredArticle> {
+  const articles = await getAllArticles()
   const newArticle: StoredArticle = {
     ...article,
     id: Date.now().toString(),
     createdAt: new Date().toISOString(),
   }
   articles.unshift(newArticle)
-  fs.writeFileSync(DB_PATH, JSON.stringify(articles, null, 2), 'utf-8')
+  await redisSet(KEY, JSON.stringify(articles))
   return newArticle
 }
 
-export function updateArticle(id: string, patch: Partial<StoredArticle>): StoredArticle | null {
-  ensureDb()
-  const articles = getAllArticles()
+export async function updateArticle(
+  id: string,
+  patch: Partial<StoredArticle>
+): Promise<StoredArticle | null> {
+  const articles = await getAllArticles()
   const idx = articles.findIndex((a) => a.id === id)
   if (idx === -1) return null
   articles[idx] = { ...articles[idx], ...patch }
-  fs.writeFileSync(DB_PATH, JSON.stringify(articles, null, 2), 'utf-8')
+  await redisSet(KEY, JSON.stringify(articles))
   return articles[idx]
+}
+
+export async function deleteArticle(id: string): Promise<boolean> {
+  const articles = await getAllArticles()
+  const filtered = articles.filter((a) => a.id !== id)
+  if (filtered.length === articles.length) return false
+  await redisSet(KEY, JSON.stringify(filtered))
+  return true
 }

@@ -5,8 +5,8 @@ import DeleteButton from './DeleteButton'
 
 export const dynamic = 'force-dynamic'
 
-export default function DashboardPage() {
-  const articles = getAllArticles()
+export default async function DashboardPage() {
+  const articles = await getAllArticles()
 
   return (
     <AdminShell>
