@@ -1,0 +1,98 @@
+{
+  "nav": {
+    "home": "Acasă",
+    "about": "Despre noi",
+    "services": "Servicii",
+    "blog": "Articole",
+    "contact": "Contact",
+    "cta": "Solicită ofertă"
+  },
+  "services": {
+    "title": "Serviciile noastre",
+    "subtitle": "Soluții digitale complete pentru afacerea ta",
+    "website": {
+      "name": "Creare Website",
+      "desc": "Site-uri profesionale, rapide și optimizate SEO"
+    },
+    "shop": {
+      "name": "Magazin Online",
+      "desc": "E-commerce complet cu integrare plăți și logistică"
+    },
+    "crm": {
+      "name": "CRM / ERP",
+      "desc": "Sisteme de gestiune personalizate pentru afacerea ta"
+    },
+    "ads": {
+      "name": "Publicitate Google",
+      "desc": "Campanii Google Ads cu ROI maxim"
+    },
+    "ai": {
+      "name": "Automatizări AI",
+      "desc": "Automatizează procesele cu inteligență artificială"
+    }
+  },
+  "hero": {
+    "badge": "Agenție Digitală #1 în Moldova",
+    "title": "Transformăm viziunile în",
+    "titleAccent": "realitate digitală",
+    "subtitle": "De la website-uri la sisteme AI complexe — Powermedia construiește soluțiile digitale care duc afacerile moldovenești pe piața globală.",
+    "cta": "Solicită consultație gratuită",
+    "ctaSecondary": "Vezi portofoliul"
+  },
+  "stats": {
+    "projects": "Proiecte livrate",
+    "clients": "Clienți mulțumiți",
+    "years": "Ani de experiență",
+    "support": "Suport tehnic"
+  },
+  "trust": {
+    "title": "Încrederea clienților noștri",
+    "subtitle": "Parteneri de succes din Moldova și Europa"
+  },
+  "process": {
+    "title": "Cum lucrăm",
+    "subtitle": "Un proces transparent, de la idee la lansare"
+  },
+  "faq": {
+    "title": "Întrebări frecvente",
+    "subtitle": "Răspunsuri la cele mai comune întrebări"
+  },
+  "contact": {
+    "title": "Hai să construim ceva măreț",
+    "subtitle": "Contactează-ne astăzi pentru o consultație gratuită",
+    "name": "Numele tău",
+    "email": "Email",
+    "phone": "Telefon (opțional)",
+    "message": "Mesajul tău",
+    "send": "Trimite mesajul",
+    "sending": "Se trimite...",
+    "success": "Mesajul a fost trimis! Te contactăm în curând.",
+    "error": "Eroare la trimitere. Încearcă din nou.",
+    "address": "Bd. Iurii Gagarin 10, CBC, Chișinău",
+    "phoneLabel": "+373 68 996 315",
+    "emailLabel": "vlad@keywords.md"
+  },
+  "about": {
+    "badge": "Despre Powermedia",
+    "title": "Agenția digitală care pune Moldova pe harta globală",
+    "subtitle": "Fondată cu viziunea de a democratiza accesul la tehnologie digitală de calitate, Powermedia a crescut pentru a deveni liderul pieței de servicii digitale din Moldova.",
+    "mission": "Misiunea noastră",
+    "missionText": "Construim soluții digitale care generează rezultate reale — nu doar site-uri frumoase, ci sisteme care cresc vânzările, automatizează procesele și scalează afacerile."
+  },
+  "blog": {
+    "title": "Articole & Resurse",
+    "subtitle": "Ghiduri, tendințe și sfaturi pentru afacerea ta digitală",
+    "readMore": "Citește mai mult",
+    "generate": "Generează articol nou"
+  },
+  "footer": {
+    "tagline": "Soluții digitale premium pentru piața din Moldova și Europa.",
+    "rights": "Toate drepturile rezervate.",
+    "privacy": "Politica de confidențialitate",
+    "terms": "Termeni și condiții"
+  },
+  "theme": {
+    "light": "Mod luminos",
+    "dark": "Mod întunecat"
+  }
+}
