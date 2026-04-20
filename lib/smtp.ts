@@ -8,21 +8,43 @@ interface ContactEmailData {
   lang: string
 }
 
-export async function sendContactEmail(data: ContactEmailData): Promise<void> {
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT ?? 587),
-    secure: false,
+function createTransporter() {
+  const host = process.env.SMTP_HOST ?? 'smtp.gmail.com'
+  const port = Number(process.env.SMTP_PORT ?? 465)
+  const secure = port === 465
+
+  return nodemailer.createTransport({
+    host,
+    port,
+    secure,
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
     },
+    tls: {
+      rejectUnauthorized: false,
+    },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
   })
+}
 
-  await transporter.sendMail({
-    from: `"Powermedia Contact" <${process.env.SMTP_USER}>`,
-    to: 'vlad@keywords.md',
-    replyTo: data.email,
+export async function sendContactEmail(data: ContactEmailData): Promise<void> {
+  const smtpUser = process.env.SMTP_USER
+  const smtpPass = process.env.SMTP_PASS
+  const toAddress = process.env.SMTP_TO ?? 'projects@keywords.md'
+
+  if (!smtpUser || !smtpPass) {
+    throw new Error('SMTP credentials not configured (SMTP_USER or SMTP_PASS missing)')
+  }
+
+  const transporter = createTransporter()
+
+  const info = await transporter.sendMail({
+    from: `"Powermedia Contact" <${smtpUser}>`,
+    to: toAddress,
+    replyTo: data.email || smtpUser,
     subject: `[Powermedia] Mesaj nou de la ${data.name}`,
     html: `
       <!DOCTYPE html>
@@ -37,12 +59,13 @@ export async function sendContactEmail(data: ContactEmailData): Promise<void> {
             <td style="padding: 12px; border-bottom: 1px solid #eee; font-weight: bold; width: 120px;">Nume:</td>
             <td style="padding: 12px; border-bottom: 1px solid #eee;">${data.name}</td>
           </tr>
+          ${data.email ? `
           <tr>
             <td style="padding: 12px; border-bottom: 1px solid #eee; font-weight: bold;">Email:</td>
             <td style="padding: 12px; border-bottom: 1px solid #eee;">
               <a href="mailto:${data.email}">${data.email}</a>
             </td>
-          </tr>
+          </tr>` : ''}
           ${data.phone ? `
           <tr>
             <td style="padding: 12px; border-bottom: 1px solid #eee; font-weight: bold;">Telefon:</td>
@@ -63,5 +86,11 @@ export async function sendContactEmail(data: ContactEmailData): Promise<void> {
       </body>
       </html>
     `,
+    text: `Mesaj nou de la: ${data.name}\nTelefon: ${data.phone ?? '-'}\nEmail: ${data.email || '-'}\n\n${data.message}`,
   })
+
+  // Log message ID for debugging
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('Email sent:', info.messageId)
+  }
 }

@@ -14,7 +14,6 @@ export async function POST(req: NextRequest) {
     const body = await req.json() as ContactBody
     const { name, email, message, lang = 'ro', phone } = body
 
-    // Phone is required; email is optional
     if (!name || !phone || !message) {
       return NextResponse.json(
         { error: 'name, phone, and message are required' },
@@ -22,7 +21,6 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Validate email only if provided
     if (email) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       if (!emailRegex.test(email)) {
@@ -34,7 +32,12 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error'
-    return NextResponse.json({ error: message }, { status: 500 })
+    const msg = error instanceof Error ? error.message : 'Unknown error'
+    // Log full error server-side (visible in Vercel Function Logs)
+    console.error('[Contact API Error]', error)
+    return NextResponse.json(
+      { error: msg },
+      { status: 500 }
+    )
   }
 }
