@@ -7,7 +7,7 @@ import { saveArticle, getAllArticles } from '@/lib/articles-db'
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://powermedia.md'
 const INDEXNOW_KEY = process.env.INDEXNOW_KEY ?? ''
 
-// IndexNow → Bing, Yandex, Seznam, Naver
+// IndexNow → Bing, Yandex, Seznam, Naver (Google nu participă la IndexNow)
 async function submitToIndexNow(urls: string[]): Promise<void> {
   if (!INDEXNOW_KEY) {
     console.warn('[IndexNow] INDEXNOW_KEY not set — skipping')
@@ -29,15 +29,6 @@ async function submitToIndexNow(urls: string[]): Promise<void> {
 
   const body = await res.text().catch(() => '')
   console.log(`[IndexNow] ${res.status} — ${body || '(empty = ok)'}`)
-}
-
-// Google nu face parte din IndexNow, dar acceptă ping sitemap
-async function pingGoogleSitemap(): Promise<void> {
-  const sitemapUrl = encodeURIComponent(`${SITE_URL}/sitemap-articles.xml`)
-  const res = await fetch(`https://www.google.com/ping?sitemap=${sitemapUrl}`, {
-    method: 'GET',
-  })
-  console.log(`[Google Ping] Sitemap ping status: ${res.status}`)
 }
 
 export async function POST(req: NextRequest) {
@@ -81,7 +72,8 @@ export async function POST(req: NextRequest) {
     // Persist the article
     const saved = await saveArticle({ topic: topic.trim(), ro: article.ro, ru: article.ru, en: article.en, images })
 
-    // Fire-and-forget: submit to IndexNow (Bing/Yandex) + ping Google sitemap
+    // Fire-and-forget: submit to IndexNow (Bing/Yandex)
+    // Pentru Google: indexarea se face organic prin sitemap-articles.xml
     const newUrls = [
       `${SITE_URL}/ro/articole/${saved.ro.slug}`,
       `${SITE_URL}/ru/articole/${saved.ru.slug}`,
@@ -89,13 +81,8 @@ export async function POST(req: NextRequest) {
     ]
     console.log('[Indexing] New article URLs:', newUrls)
 
-    Promise.allSettled([
-      submitToIndexNow(newUrls),
-      pingGoogleSitemap(),
-    ]).then((results) => {
-      results.forEach((r) => {
-        if (r.status === 'rejected') console.error('[Indexing] Error:', r.reason)
-      })
+    submitToIndexNow(newUrls).catch((err) => {
+      console.error('[IndexNow] Error:', err)
     })
 
     return NextResponse.json({ success: true, article: saved })
