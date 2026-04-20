@@ -7,17 +7,12 @@ import { saveArticle, getAllArticles } from '@/lib/articles-db'
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://powermedia.md'
 const INDEXNOW_KEY = process.env.INDEXNOW_KEY ?? ''
 
-async function submitToIndexNow(roSlug: string, ruSlug: string, enSlug: string): Promise<{ ok: boolean; status?: number; body?: string; error?: string }> {
+// IndexNow → Bing, Yandex, Seznam, Naver
+async function submitToIndexNow(urls: string[]): Promise<void> {
   if (!INDEXNOW_KEY) {
-    console.warn('[IndexNow] INDEXNOW_KEY not set — skipping submission')
-    return { ok: false, error: 'INDEXNOW_KEY not configured' }
+    console.warn('[IndexNow] INDEXNOW_KEY not set — skipping')
+    return
   }
-
-  const urls = [
-    `${SITE_URL}/ro/articole/${roSlug}`,
-    `${SITE_URL}/ru/articole/${ruSlug}`,
-    `${SITE_URL}/en/articole/${enSlug}`,
-  ]
 
   const payload = {
     host: new URL(SITE_URL).hostname,
@@ -26,22 +21,23 @@ async function submitToIndexNow(roSlug: string, ruSlug: string, enSlug: string):
     urlList: urls,
   }
 
-  console.log('[IndexNow] Submitting URLs:', urls)
-
   const res = await fetch('https://api.indexnow.org/indexnow', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json; charset=utf-8' },
     body: JSON.stringify(payload),
   })
 
-  const resBody = await res.text().catch(() => '')
-  console.log(`[IndexNow] Response: ${res.status} ${res.statusText} — ${resBody || '(empty)'}`)
+  const body = await res.text().catch(() => '')
+  console.log(`[IndexNow] ${res.status} — ${body || '(empty = ok)'}`)
+}
 
-  if (!res.ok) {
-    return { ok: false, status: res.status, body: resBody }
-  }
-
-  return { ok: true, status: res.status }
+// Google nu face parte din IndexNow, dar acceptă ping sitemap
+async function pingGoogleSitemap(): Promise<void> {
+  const sitemapUrl = encodeURIComponent(`${SITE_URL}/sitemap-articles.xml`)
+  const res = await fetch(`https://www.google.com/ping?sitemap=${sitemapUrl}`, {
+    method: 'GET',
+  })
+  console.log(`[Google Ping] Sitemap ping status: ${res.status}`)
 }
 
 export async function POST(req: NextRequest) {
@@ -85,9 +81,21 @@ export async function POST(req: NextRequest) {
     // Persist the article
     const saved = await saveArticle({ topic: topic.trim(), ro: article.ro, ru: article.ru, en: article.en, images })
 
-    // Submit article URLs to IndexNow for immediate search engine indexing
-    submitToIndexNow(saved.ro.slug, saved.ru.slug, saved.en.slug).catch(() => {
-      // Non-critical — don't fail the request if indexing submission fails
+    // Fire-and-forget: submit to IndexNow (Bing/Yandex) + ping Google sitemap
+    const newUrls = [
+      `${SITE_URL}/ro/articole/${saved.ro.slug}`,
+      `${SITE_URL}/ru/articole/${saved.ru.slug}`,
+      `${SITE_URL}/en/articole/${saved.en.slug}`,
+    ]
+    console.log('[Indexing] New article URLs:', newUrls)
+
+    Promise.allSettled([
+      submitToIndexNow(newUrls),
+      pingGoogleSitemap(),
+    ]).then((results) => {
+      results.forEach((r) => {
+        if (r.status === 'rejected') console.error('[Indexing] Error:', r.reason)
+      })
     })
 
     return NextResponse.json({ success: true, article: saved })
