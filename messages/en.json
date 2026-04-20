@@ -1,0 +1,98 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About Us",
+    "services": "Services",
+    "blog": "Articles",
+    "contact": "Contact",
+    "cta": "Get a Quote"
+  },
+  "services": {
+    "title": "Our Services",
+    "subtitle": "Complete digital solutions for your business",
+    "website": {
+      "name": "Website Development",
+      "desc": "Professional, fast, and SEO-optimized websites"
+    },
+    "shop": {
+      "name": "Online Store",
+      "desc": "Full e-commerce with payment and logistics integration"
+    },
+    "crm": {
+      "name": "CRM / ERP Systems",
+      "desc": "Custom management systems for your business"
+    },
+    "ads": {
+      "name": "Google Advertising",
+      "desc": "Google Ads campaigns with maximum ROI"
+    },
+    "ai": {
+      "name": "AI Automation",
+      "desc": "Automate your processes with artificial intelligence"
+    }
+  },
+  "hero": {
+    "badge": "Moldova's #1 Digital Agency",
+    "title": "We turn visions into",
+    "titleAccent": "digital reality",
+    "subtitle": "From websites to complex AI systems — Powermedia builds digital solutions that bring businesses from Moldova to the global market.",
+    "cta": "Request free consultation",
+    "ctaSecondary": "View portfolio"
+  },
+  "stats": {
+    "projects": "Projects delivered",
+    "clients": "Happy clients",
+    "years": "Years of experience",
+    "support": "Technical support"
+  },
+  "trust": {
+    "title": "Our clients trust us",
+    "subtitle": "Successful partners from Moldova and Europe"
+  },
+  "process": {
+    "title": "How we work",
+    "subtitle": "A transparent process, from idea to launch"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Answers to the most common questions"
+  },
+  "contact": {
+    "title": "Let's build something great",
+    "subtitle": "Contact us today for a free consultation",
+    "name": "Your name",
+    "email": "Email",
+    "phone": "Phone (optional)",
+    "message": "Your message",
+    "send": "Send message",
+    "sending": "Sending...",
+    "success": "Message sent! We'll get back to you shortly.",
+    "error": "Error sending. Please try again.",
+    "address": "Bd. Iurii Gagarin 10, CBC, Chișinău",
+    "phoneLabel": "+373 68 996 315",
+    "emailLabel": "vlad@keywords.md"
+  },
+  "about": {
+    "badge": "About Powermedia",
+    "title": "The digital agency putting Moldova on the global map",
+    "subtitle": "Founded with the vision of democratizing access to quality digital technology, Powermedia has grown to become the leading provider of digital services in Moldova.",
+    "mission": "Our mission",
+    "missionText": "We build digital solutions that generate real results — not just beautiful websites, but systems that grow sales, automate processes, and scale businesses."
+  },
+  "blog": {
+    "title": "Articles & Resources",
+    "subtitle": "Guides, trends and tips for your digital business",
+    "readMore": "Read more",
+    "generate": "Generate new article"
+  },
+  "footer": {
+    "tagline": "Premium digital solutions for the Moldovan and European market.",
+    "rights": "All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms & Conditions"
+  },
+  "theme": {
+    "light": "Light mode",
+    "dark": "Dark mode"
+  }
+}
