@@ -7,8 +7,11 @@ import { saveArticle, getAllArticles } from '@/lib/articles-db'
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://powermedia.md'
 const INDEXNOW_KEY = process.env.INDEXNOW_KEY ?? ''
 
-async function submitToIndexNow(roSlug: string, ruSlug: string, enSlug: string) {
-  if (!INDEXNOW_KEY) return
+async function submitToIndexNow(roSlug: string, ruSlug: string, enSlug: string): Promise<{ ok: boolean; status?: number; body?: string; error?: string }> {
+  if (!INDEXNOW_KEY) {
+    console.warn('[IndexNow] INDEXNOW_KEY not set — skipping submission')
+    return { ok: false, error: 'INDEXNOW_KEY not configured' }
+  }
 
   const urls = [
     `${SITE_URL}/ro/articole/${roSlug}`,
@@ -16,18 +19,29 @@ async function submitToIndexNow(roSlug: string, ruSlug: string, enSlug: string) 
     `${SITE_URL}/en/articole/${enSlug}`,
   ]
 
-  const body = {
+  const payload = {
     host: new URL(SITE_URL).hostname,
     key: INDEXNOW_KEY,
     keyLocation: `${SITE_URL}/${INDEXNOW_KEY}.txt`,
     urlList: urls,
   }
 
-  await fetch('https://api.indexnow.org/indexnow', {
+  console.log('[IndexNow] Submitting URLs:', urls)
+
+  const res = await fetch('https://api.indexnow.org/indexnow', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json; charset=utf-8' },
-    body: JSON.stringify(body),
+    body: JSON.stringify(payload),
   })
+
+  const resBody = await res.text().catch(() => '')
+  console.log(`[IndexNow] Response: ${res.status} ${res.statusText} — ${resBody || '(empty)'}`)
+
+  if (!res.ok) {
+    return { ok: false, status: res.status, body: resBody }
+  }
+
+  return { ok: true, status: res.status }
 }
 
 export async function POST(req: NextRequest) {
