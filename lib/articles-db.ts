@@ -11,40 +11,55 @@ export interface StoredArticle {
   images: UnsplashImage[]
 }
 
-const UPSTASH_URL = process.env.UPSTASH_REDIS_REST_URL!
-const UPSTASH_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN!
+const UPSTASH_URL = process.env.UPSTASH_REDIS_REST_URL
+const UPSTASH_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN
 const KEY = 'articles'
 
-async function redisGet(key: string): Promise<string | null> {
-  if (!UPSTASH_URL || !UPSTASH_TOKEN) return null
-  const res = await fetch(`${UPSTASH_URL}/get/${key}`, {
-    headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
-    cache: 'no-store',
-  })
-  const data = await res.json() as { result: string | null }
-  return data.result
-}
+// Use Upstash pipeline format — unambiguous, value passed as plain string arg
+async function redisGet(key: string): Promise<StoredArticle[]> {
+  if (!UPSTASH_URL || !UPSTASH_TOKEN) return []
 
-async function redisSet(key: string, value: string): Promise<void> {
-  if (!UPSTASH_URL || !UPSTASH_TOKEN) return
-  await fetch(`${UPSTASH_URL}/set/${key}`, {
+  const res = await fetch(`${UPSTASH_URL}/pipeline`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${UPSTASH_TOKEN}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(value),
+    body: JSON.stringify([['GET', key]]),
+    cache: 'no-store',
+  })
+
+  const data = await res.json() as Array<{ result: string | null }>
+  const raw = data[0]?.result
+
+  if (!raw) return []
+
+  try {
+    const parsed = JSON.parse(raw)
+    // Defensive: handle double-serialized string
+    if (typeof parsed === 'string') return JSON.parse(parsed) as StoredArticle[]
+    if (Array.isArray(parsed)) return parsed as StoredArticle[]
+    return []
+  } catch {
+    return []
+  }
+}
+
+async function redisSet(key: string, articles: StoredArticle[]): Promise<void> {
+  if (!UPSTASH_URL || !UPSTASH_TOKEN) return
+
+  await fetch(`${UPSTASH_URL}/pipeline`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${UPSTASH_TOKEN}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify([['SET', key, JSON.stringify(articles)]]),
   })
 }
 
 export async function getAllArticles(): Promise<StoredArticle[]> {
-  const raw = await redisGet(KEY)
-  if (!raw) return []
-  try {
-    return JSON.parse(raw) as StoredArticle[]
-  } catch {
-    return []
-  }
+  return redisGet(KEY)
 }
 
 export async function getArticleBySlug(
@@ -52,7 +67,7 @@ export async function getArticleBySlug(
   lang: 'ro' | 'ru' | 'en'
 ): Promise<StoredArticle | null> {
   const articles = await getAllArticles()
-  return articles.find((a) => a[lang].slug === slug) ?? null
+  return articles.find((a) => a[lang]?.slug === slug) ?? null
 }
 
 export async function saveArticle(
@@ -65,7 +80,7 @@ export async function saveArticle(
     createdAt: new Date().toISOString(),
   }
   articles.unshift(newArticle)
-  await redisSet(KEY, JSON.stringify(articles))
+  await redisSet(KEY, articles)
   return newArticle
 }
 
@@ -77,7 +92,7 @@ export async function updateArticle(
   const idx = articles.findIndex((a) => a.id === id)
   if (idx === -1) return null
   articles[idx] = { ...articles[idx], ...patch }
-  await redisSet(KEY, JSON.stringify(articles))
+  await redisSet(KEY, articles)
   return articles[idx]
 }
 
@@ -85,6 +100,6 @@ export async function deleteArticle(id: string): Promise<boolean> {
   const articles = await getAllArticles()
   const filtered = articles.filter((a) => a.id !== id)
   if (filtered.length === articles.length) return false
-  await redisSet(KEY, JSON.stringify(filtered))
+  await redisSet(KEY, filtered)
   return true
 }
