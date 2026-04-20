@@ -3,6 +3,7 @@ import { generateMultilingualArticle } from '@/lib/gemini'
 import { searchImages } from '@/lib/unsplash'
 import { buildInternalLinks } from '@/lib/interlinking'
 import { saveArticle, getAllArticles } from '@/lib/articles-db'
+import { submitUrlsToGoogle } from '@/lib/google-indexing'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://powermedia.md'
 const INDEXNOW_KEY = process.env.INDEXNOW_KEY ?? ''
@@ -81,8 +82,14 @@ export async function POST(req: NextRequest) {
     ]
     console.log('[Indexing] New article URLs:', newUrls)
 
+    // IndexNow → Bing, Yandex
     submitToIndexNow(newUrls).catch((err) => {
       console.error('[IndexNow] Error:', err)
+    })
+
+    // Google Indexing API (dacă GOOGLE_SERVICE_ACCOUNT_JSON e setat)
+    submitUrlsToGoogle(newUrls).catch((err) => {
+      console.error('[Google Indexing] Error:', err)
     })
 
     return NextResponse.json({ success: true, article: saved })
