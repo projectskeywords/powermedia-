@@ -71,7 +71,7 @@ export default function ArticleCard({ article, lang, readMoreLabel }: ArticleCar
       <div className="p-6">
         {/* Keywords */}
         <div className="flex flex-wrap gap-1.5 mb-3">
-          {version.keywords.slice(0, 3).map((kw) => (
+          {(version.keywords ?? []).slice(0, 3).map((kw) => (
             <span
               key={kw}
               className="px-2.5 py-0.5 text-[11px] font-medium bg-white/5 text-white/40 rounded-full border border-white/8 capitalize"

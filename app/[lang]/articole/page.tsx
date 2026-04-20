@@ -4,6 +4,8 @@ import { getMessages, isValidLang, type Lang } from '@/lib/i18n'
 import { getAllArticles } from '@/lib/articles-db'
 import ArticleCard from '@/components/blog/ArticleCard'
 
+export const dynamic = 'force-dynamic'
+
 interface PageProps { params: Promise<{ lang: string }> }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
