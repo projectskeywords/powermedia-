@@ -13,7 +13,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ru: 'CRM и ERP системы для бизнеса в Молдове | Powermedia',
     en: 'Custom CRM & ERP Systems Moldova | Powermedia',
   }
-  return { title: titles[lang as Lang] }
+  const descs: Record<Lang, string> = {
+    ro: 'Sisteme CRM și ERP personalizate pentru afaceri din Moldova. Gestionează clienți, stocuri, facturare și echipă dintr-un singur dashboard. Demo gratuit 30 minute.',
+    ru: 'Индивидуальные системы CRM и ERP для бизнеса в Молдове. Управляйте клиентами, складом, выставлением счетов из одного dashboard. Бесплатное демо 30 минут.',
+    en: 'Custom CRM and ERP systems for businesses in Moldova. Manage clients, inventory, invoicing and team from one dashboard. Free 30-minute demo.',
+  }
+  return {
+    title: titles[lang as Lang],
+    description: descs[lang as Lang],
+    alternates: {
+      canonical: `https://powermedia.md/${lang}/servicii/crm-erp`,
+      languages: {
+        ro: 'https://powermedia.md/ro/servicii/crm-erp',
+        ru: 'https://powermedia.md/ru/servicii/crm-erp',
+        en: 'https://powermedia.md/en/servicii/crm-erp',
+      },
+    },
+  }
 }
 
 const DATA: Record<Lang, ServicePageData> = {
@@ -21,7 +37,7 @@ const DATA: Record<Lang, ServicePageData> = {
     lang: 'ro',
     hero: {
       badge: 'CRM / ERP',
-      title: 'Sisteme de gestiune care <span class="text-[#e8ff00]">scalează</span> odată cu tine',
+      title: 'CRM & ERP <span class="text-[#e8ff00]">Moldova</span> — Sisteme care scalează',
       subtitle: 'Construim soluții CRM și ERP personalizate pentru afacerile moldovenești. Gestionează clienții, stocurile, facturarea și echipa dintr-un singur dashboard.',
       cta: 'Demo gratuit 30 minute',
     },
@@ -178,5 +194,5 @@ const DATA: Record<Lang, ServicePageData> = {
 export default async function CrmErpPage({ params }: PageProps) {
   const { lang } = await params
   if (!isValidLang(lang)) notFound()
-  return <ServicePageTemplate data={DATA[lang as Lang]} />
+  return <ServicePageTemplate data={DATA[lang as Lang]} currentSlug="crm-erp" />
 }

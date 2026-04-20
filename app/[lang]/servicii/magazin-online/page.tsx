@@ -13,7 +13,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ru: 'Создание интернет-магазина в Молдове | Powermedia',
     en: 'Online Store Development Moldova | Powermedia',
   }
-  return { title: titles[lang as Lang] }
+  const descs: Record<Lang, string> = {
+    ro: 'Creăm magazine online complete pentru afaceri din Moldova — plăți integrate, gestionare stocuri, design premium. E-commerce care vinde 24/7 în Moldova și Europa.',
+    ru: 'Создаём полноценные интернет-магазины для бизнеса в Молдове — интеграция платежей, управление складом, премиум-дизайн. E-commerce работающий 24/7.',
+    en: 'We build complete online stores for businesses in Moldova — payment integration, inventory management, premium design. E-commerce that sells 24/7.',
+  }
+  return {
+    title: titles[lang as Lang],
+    description: descs[lang as Lang],
+    alternates: {
+      canonical: `https://powermedia.md/${lang}/servicii/magazin-online`,
+      languages: {
+        ro: 'https://powermedia.md/ro/servicii/magazin-online',
+        ru: 'https://powermedia.md/ru/servicii/magazin-online',
+        en: 'https://powermedia.md/en/servicii/magazin-online',
+      },
+    },
+  }
 }
 
 const DATA: Record<Lang, ServicePageData> = {
@@ -21,7 +37,7 @@ const DATA: Record<Lang, ServicePageData> = {
     lang: 'ro',
     hero: {
       badge: 'Magazin Online',
-      title: 'E-commerce care <span class="text-[#e8ff00]">generează vânzări</span> non-stop',
+      title: 'Magazin Online <span class="text-[#e8ff00]">Moldova</span> — E-commerce care vinde',
       subtitle: 'Construim magazine online complete cu integrare plăți, gestionare stocuri, și tot ce ai nevoie pentru a vinde online în Moldova și Europa.',
       cta: 'Lansează magazinul tău online',
     },
@@ -178,5 +194,5 @@ const DATA: Record<Lang, ServicePageData> = {
 export default async function MagazinOnlinePage({ params }: PageProps) {
   const { lang } = await params
   if (!isValidLang(lang)) notFound()
-  return <ServicePageTemplate data={DATA[lang as Lang]} />
+  return <ServicePageTemplate data={DATA[lang as Lang]} currentSlug="magazin-online" />
 }

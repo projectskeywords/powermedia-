@@ -17,22 +17,39 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const t = getMessages(lang as Lang)
 
   const titles: Record<Lang, string> = {
-    ro: 'Powermedia — Agenție Digitală #1 în Moldova',
-    ru: 'Powermedia — Цифровое агентство №1 в Молдове',
-    en: 'Powermedia — Moldova\'s #1 Digital Agency',
+    ro: 'Powermedia — Agenție Digitală #1 în Moldova | Chișinău',
+    ru: 'Powermedia — Цифровое агентство №1 в Молдове | Кишинёв',
+    en: 'Powermedia — Moldova\'s #1 Digital Agency | Chișinău',
   }
   const descs: Record<Lang, string> = {
-    ro: 'Website-uri, magazine online, CRM/ERP, Google Ads și automatizări AI. Soluții digitale premium pentru Moldova.',
-    ru: 'Сайты, интернет-магазины, CRM/ERP, Google Ads и AI-автоматизация. Премиальные цифровые решения для Молдовы.',
-    en: 'Websites, online stores, CRM/ERP, Google Ads and AI automation. Premium digital solutions for the European market.',
+    ro: 'Agenție digitală Chișinău, Moldova — creare website, magazine online, Google Ads, CRM/ERP și automatizări AI. 150+ proiecte livrate, 5★ rating Google.',
+    ru: 'Цифровое агентство Кишинёв, Молдова — создание сайтов, интернет-магазинов, Google Ads, CRM/ERP и AI-автоматизация. 150+ проектов, рейтинг 5★.',
+    en: 'Digital agency Chișinău, Moldova — website development, online stores, Google Ads, CRM/ERP and AI automation. 150+ projects, 5★ Google rating.',
+  }
+  const keywords: Record<Lang, string> = {
+    ro: 'agenție digitală Moldova, creare website Chișinău, Google Ads Moldova, magazin online Moldova, SEO Moldova, automatizări AI',
+    ru: 'цифровое агентство Молдова, создание сайта Кишинёв, Google Ads Молдова, интернет-магазин Молдова, SEO Молдова',
+    en: 'digital agency Moldova, website development Chisinau, Google Ads Moldova, online store Moldova, SEO Moldova',
   }
 
   return {
     title: titles[lang as Lang],
     description: descs[lang as Lang],
+    keywords: keywords[lang as Lang],
     alternates: {
-      canonical: `/${lang}`,
-      languages: { ro: '/ro', ru: '/ru', en: '/en' },
+      canonical: `https://powermedia.md/${lang}`,
+      languages: {
+        ro: 'https://powermedia.md/ro',
+        ru: 'https://powermedia.md/ru',
+        en: 'https://powermedia.md/en',
+      },
+    },
+    openGraph: {
+      title: titles[lang as Lang],
+      description: descs[lang as Lang],
+      url: `https://powermedia.md/${lang}`,
+      type: 'website',
+      locale: lang === 'ro' ? 'ro_RO' : lang === 'ru' ? 'ru_RU' : 'en_GB',
     },
   }
 }

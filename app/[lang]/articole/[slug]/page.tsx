@@ -27,11 +27,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: `${version.title} | Powermedia`,
     description: version.metaDescription,
     keywords: version.keywords.join(', '),
+    alternates: {
+      canonical: `https://powermedia.md/${lang}/articole/${slug}`,
+      languages: {
+        ro: `https://powermedia.md/ro/articole/${article.ro.slug}`,
+        ru: `https://powermedia.md/ru/articole/${article.ru.slug}`,
+        en: `https://powermedia.md/en/articole/${article.en.slug}`,
+      },
+    },
     openGraph: {
       title: version.title,
       description: version.metaDescription,
-      images: image ? [{ url: image.url, alt: image.alt }] : [],
+      images: image ? [{ url: image.url, alt: image.alt, width: 1200, height: 630 }] : [],
       type: 'article',
+      publishedTime: article.createdAt,
+      authors: ['https://powermedia.md'],
+      siteName: 'Powermedia',
     },
   }
 }
@@ -121,8 +132,52 @@ export default async function ArticleDetailPage({ params }: PageProps) {
   const contentPart1 = contentHtml.slice(0, splitIdx)
   const contentPart2 = contentHtml.slice(splitIdx)
 
+  const blogPostingSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: version.title,
+    description: version.metaDescription,
+    image: images[0]?.url ?? 'https://powermedia.md/og-image.jpg',
+    datePublished: article.createdAt,
+    dateModified: article.createdAt,
+    inLanguage: lang,
+    author: {
+      '@type': 'Organization',
+      name: 'Powermedia',
+      url: 'https://powermedia.md',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://powermedia.md/logo.png',
+      },
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Powermedia',
+      url: 'https://powermedia.md',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://powermedia.md/logo.png',
+        width: 200,
+        height: 60,
+      },
+    },
+    keywords: version.keywords.join(', '),
+    url: `https://powermedia.md/${lang}/articole/${slug}`,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://powermedia.md/${lang}/articole/${slug}`,
+    },
+    wordCount: version.content.replace(/<[^>]+>/g, '').split(/\s+/).length,
+    timeRequired: `PT${readTime}M`,
+  }
+
   return (
     <main className="bg-zinc-950 min-h-screen">
+      {/* BlogPosting structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }}
+      />
       {/* HERO — full-bleed with title overlay */}
       <div className="relative pt-16">
         {images[0] ? (

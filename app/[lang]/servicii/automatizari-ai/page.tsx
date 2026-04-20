@@ -12,11 +12,27 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!isValidLang(lang)) return {}
 
   const titles: Record<Lang, string> = {
-    ro: 'Automatizări AI pentru Afaceri | Powermedia Moldova',
-    ru: 'AI-автоматизация для бизнеса | Powermedia Молдова',
-    en: 'AI Business Automation Solutions | Powermedia',
+    ro: 'Automatizări AI pentru Afaceri Moldova | Powermedia',
+    ru: 'AI-автоматизация для бизнеса в Молдове | Powermedia',
+    en: 'AI Business Automation Moldova | Powermedia',
   }
-  return { title: titles[lang as Lang] }
+  const descs: Record<Lang, string> = {
+    ro: 'Automatizări AI pentru afaceri din Moldova — reducem costurile operaționale cu 40-70%, automatizăm procesele repetitive și eliberăm echipa pentru muncă cu valoare adăugată.',
+    ru: 'AI-автоматизация для бизнеса в Молдове — снижаем операционные затраты на 40-70%, автоматизируем повторяющиеся процессы. Бесплатный анализ процессов.',
+    en: 'AI automation for businesses in Moldova — reduce operational costs by 40-70%, automate repetitive processes. Free process analysis consultation.',
+  }
+  return {
+    title: titles[lang as Lang],
+    description: descs[lang as Lang],
+    alternates: {
+      canonical: `https://powermedia.md/${lang}/servicii/automatizari-ai`,
+      languages: {
+        ro: 'https://powermedia.md/ro/servicii/automatizari-ai',
+        ru: 'https://powermedia.md/ru/servicii/automatizari-ai',
+        en: 'https://powermedia.md/en/servicii/automatizari-ai',
+      },
+    },
+  }
 }
 
 const PAGE_DATA: Record<Lang, ServicePageData> = {
@@ -24,7 +40,7 @@ const PAGE_DATA: Record<Lang, ServicePageData> = {
     lang: 'ro',
     hero: {
       badge: 'Automatizări AI',
-      title: 'Pune <span class="text-[#e8ff00]">AI-ul</span> la muncă pentru afacerea ta',
+      title: 'Automatizări AI <span class="text-[#e8ff00]">Moldova</span> — Procese pe pilot automat',
       subtitle: 'Automatizăm procesele repetitive, reducem costurile operaționale cu 40-70% și eliberăm echipa ta pentru muncă cu valoare adăugată reală.',
       cta: 'Analizează procesele mele gratuit',
     },
@@ -181,5 +197,5 @@ const PAGE_DATA: Record<Lang, ServicePageData> = {
 export default async function AutomatizariAIPage({ params }: PageProps) {
   const { lang } = await params
   if (!isValidLang(lang)) notFound()
-  return <ServicePageTemplate data={PAGE_DATA[lang as Lang]} />
+  return <ServicePageTemplate data={PAGE_DATA[lang as Lang]} currentSlug="automatizari-ai" />
 }

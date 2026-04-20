@@ -7,6 +7,30 @@ import ProcessSection from './ProcessSection'
 import FAQSection from './FAQSection'
 import type { Lang } from '@/lib/i18n'
 
+const ALL_SERVICES: Record<Lang, Array<{ name: string; slug: string; icon: string }>> = {
+  ro: [
+    { name: 'Creare Website', slug: 'creare-website', icon: '🌐' },
+    { name: 'Magazin Online', slug: 'magazin-online', icon: '🛒' },
+    { name: 'Google Ads', slug: 'publicitate-google', icon: '📢' },
+    { name: 'Automatizări AI', slug: 'automatizari-ai', icon: '🤖' },
+    { name: 'CRM / ERP', slug: 'crm-erp', icon: '📊' },
+  ],
+  ru: [
+    { name: 'Создание сайта', slug: 'creare-website', icon: '🌐' },
+    { name: 'Интернет-магазин', slug: 'magazin-online', icon: '🛒' },
+    { name: 'Google Реклама', slug: 'publicitate-google', icon: '📢' },
+    { name: 'AI-автоматизация', slug: 'automatizari-ai', icon: '🤖' },
+    { name: 'CRM / ERP', slug: 'crm-erp', icon: '📊' },
+  ],
+  en: [
+    { name: 'Website Development', slug: 'creare-website', icon: '🌐' },
+    { name: 'Online Store', slug: 'magazin-online', icon: '🛒' },
+    { name: 'Google Ads', slug: 'publicitate-google', icon: '📢' },
+    { name: 'AI Automation', slug: 'automatizari-ai', icon: '🤖' },
+    { name: 'CRM / ERP', slug: 'crm-erp', icon: '📊' },
+  ],
+}
+
 interface ProcessStep {
   step: number
   title: string
@@ -79,9 +103,31 @@ export interface ServicePageData {
   }
 }
 
-export default function ServicePageTemplate({ data }: { data: ServicePageData }) {
+export default function ServicePageTemplate({ data, currentSlug }: { data: ServicePageData; currentSlug?: string }) {
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: data.faq.items.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: { '@type': 'Answer', text: item.answer },
+    })),
+  }
+
+  const crossServices = ALL_SERVICES[data.lang].filter((s) => s.slug !== currentSlug)
+
+  const otherServicesLabel =
+    data.lang === 'ro' ? 'Alte servicii Powermedia' :
+    data.lang === 'ru' ? 'Другие услуги Powermedia' :
+    'Other Powermedia services'
+
   return (
     <main className="bg-black">
+      {/* FAQPage structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       {/* HERO */}
       <section className="relative min-h-[85vh] flex items-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-black to-zinc-950" />
@@ -305,6 +351,27 @@ export default function ServicePageTemplate({ data }: { data: ServicePageData })
         subtitle={data.faq.subtitle}
         items={data.faq.items}
       />
+
+      {/* CROSS-SERVICE INTERNAL LINKS */}
+      <section className="py-14 bg-zinc-950 border-t border-white/5">
+        <div className="container mx-auto px-6 max-w-5xl">
+          <p className="text-white/30 text-xs font-semibold tracking-widest uppercase text-center mb-6">
+            {otherServicesLabel}
+          </p>
+          <div className="flex flex-wrap justify-center gap-3">
+            {crossServices.map((svc) => (
+              <Link
+                key={svc.slug}
+                href={`/${data.lang}/servicii/${svc.slug}`}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-900 border border-white/10 text-white/60 hover:text-white hover:border-[#e8ff00]/30 hover:bg-zinc-800 transition-all text-sm font-medium"
+              >
+                <span>{svc.icon}</span>
+                {svc.name}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* FINAL CTA */}
       <section className="py-32 bg-black text-center border-t border-white/5">

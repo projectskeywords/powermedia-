@@ -33,11 +33,11 @@
   },
   "hero": {
     "badge": "Agenție Digitală #1 în Moldova",
-    "title": "Transformăm viziunile în",
-    "titleAccent": "realitate digitală",
-    "subtitle": "De la website-uri la sisteme AI complexe — Powermedia construiește soluțiile digitale care duc afacerile moldovenești pe piața globală.",
+    "title": "Agenție Digitală Moldova",
+    "titleAccent": "Website, SEO & Google Ads",
+    "subtitle": "De la creare website la Google Ads și automatizări AI — Powermedia construiește soluțiile digitale care duc afacerile din Chișinău pe piața globală.",
     "cta": "Solicită consultație gratuită",
-    "ctaSecondary": "Vezi portofoliul"
+    "ctaSecondary": "Serviciile noastre"
   },
   "stats": {
     "projects": "Proiecte livrate",
@@ -70,7 +70,7 @@
     "error": "Eroare la trimitere. Încearcă din nou.",
     "address": "Bd. Iurii Gagarin 10, CBC, Chișinău",
     "phoneLabel": "+373 68 996 315",
-    "emailLabel": "vlad@keywords.md"
+    "emailLabel": "vlad@powermedia.md"
   },
   "about": {
     "badge": "Despre Powermedia",

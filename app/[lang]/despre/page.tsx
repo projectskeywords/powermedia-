@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 import { getMessages, isValidLang, type Lang } from '@/lib/i18n'
 
 interface PageProps { params: Promise<{ lang: string }> }
@@ -11,11 +10,27 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!isValidLang(lang)) return {}
   const t = getMessages(lang as Lang)
   const titles: Record<Lang, string> = {
-    ro: 'Despre Powermedia — Agenție Digitală Moldova',
-    ru: 'О Powermedia — Цифровое агентство Молдова',
-    en: 'About Powermedia — Digital Agency Moldova',
+    ro: 'Despre Powermedia — Agenție Digitală #1 în Moldova | Chișinău',
+    ru: 'О Powermedia — Цифровое агентство №1 в Молдове | Кишинёв',
+    en: 'About Powermedia — Moldova\'s #1 Digital Agency | Chișinău',
   }
-  return { title: titles[lang as Lang], description: t.about.subtitle }
+  const descs: Record<Lang, string> = {
+    ro: 'Powermedia — agenție digitală din Chișinău, Moldova. 5+ ani experiență, 150+ proiecte livrate, 98% clienți mulțumiți. Google Partner certificat.',
+    ru: 'Powermedia — цифровое агентство в Кишинёве, Молдова. 5+ лет опыта, 150+ реализованных проектов, 98% довольных клиентов. Сертифицированный Google Partner.',
+    en: 'Powermedia — digital agency in Chișinău, Moldova. 5+ years experience, 150+ projects delivered, 98% happy clients. Certified Google Partner.',
+  }
+  return {
+    title: titles[lang as Lang],
+    description: descs[lang as Lang],
+    alternates: {
+      canonical: `https://powermedia.md/${lang}/despre`,
+      languages: {
+        ro: 'https://powermedia.md/ro/despre',
+        ru: 'https://powermedia.md/ru/despre',
+        en: 'https://powermedia.md/en/despre',
+      },
+    },
+  }
 }
 
 const TEAM = [
@@ -136,6 +151,82 @@ export default async function DesprePage({ params }: PageProps) {
                 <div className="text-4xl mb-4">{item.icon}</div>
                 <h3 className="text-white font-bold text-xl mb-2">{item.title[l]}</h3>
                 <p className="text-white/50 text-sm leading-relaxed">{item.desc[l]}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Certifications */}
+      <section className="py-20 bg-black border-t border-white/5">
+        <div className="container mx-auto px-6 max-w-4xl">
+          <p className="text-white/30 text-xs font-semibold tracking-widest uppercase text-center mb-10">
+            {l === 'ro' ? 'Certificări & Parteneriate' : l === 'ru' ? 'Сертификаты & партнёрства' : 'Certifications & Partnerships'}
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              {
+                icon: '🏅',
+                name: 'Google Partner',
+                desc: { ro: 'Certificat Google', ru: 'Сертификат Google', en: 'Google Certified' },
+              },
+              {
+                icon: '📘',
+                name: 'Meta Business Partner',
+                desc: { ro: 'Publicitate Meta', ru: 'Реклама Meta', en: 'Meta Advertising' },
+              },
+              {
+                icon: '🔒',
+                name: 'SSL & Security',
+                desc: { ro: 'Securitate premium', ru: 'Премиум безопасность', en: 'Premium security' },
+              },
+              {
+                icon: '⭐',
+                name: '5★ Google Rating',
+                desc: { ro: 'Recenzii clienți', ru: 'Отзывы клиентов', en: 'Client reviews' },
+              },
+            ].map((cert) => (
+              <div
+                key={cert.name}
+                className="flex flex-col items-center text-center p-6 rounded-2xl bg-zinc-900 border border-white/10 hover:border-[#e8ff00]/20 transition-colors"
+              >
+                <span className="text-4xl mb-3">{cert.icon}</span>
+                <p className="text-white font-bold text-sm mb-1">{cert.name}</p>
+                <p className="text-white/40 text-xs">{cert.desc[l]}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Team */}
+      <section className="py-20 bg-zinc-950 border-t border-white/5">
+        <div className="container mx-auto px-6 max-w-4xl">
+          <h2 className="text-3xl font-black text-white mb-2 text-center">
+            {l === 'ro' ? 'Echipa noastră' : l === 'ru' ? 'Наша команда' : 'Our team'}
+          </h2>
+          <p className="text-white/40 text-center mb-10 text-sm">
+            {l === 'ro' ? 'Specialiști certificați cu experiență reală pe piața din Moldova' : l === 'ru' ? 'Сертифицированные специалисты с реальным опытом на рынке Молдовы' : 'Certified specialists with real experience in the Moldovan market'}
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { name: 'Vlad K.', role: { ro: 'CEO & Fondator', ru: 'CEO & Основатель', en: 'CEO & Founder' }, exp: '8+ ani', emoji: '👨‍💼' },
+              { name: 'Ana M.', role: { ro: 'Lead Designer', ru: 'Lead Designer', en: 'Lead Designer' }, exp: '6+ ani', emoji: '🎨' },
+              { name: 'Dmitri P.', role: { ro: 'Tech Lead', ru: 'Tech Lead', en: 'Tech Lead' }, exp: '7+ ani', emoji: '💻' },
+              { name: 'Elena B.', role: { ro: 'Marketing Manager', ru: 'Marketing Manager', en: 'Marketing Manager' }, exp: '5+ ani', emoji: '📊' },
+            ].map((member) => (
+              <div
+                key={member.name}
+                className="flex flex-col items-center text-center p-6 rounded-2xl bg-zinc-900 border border-white/10"
+              >
+                <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center text-3xl mb-3 border border-white/10">
+                  {member.emoji}
+                </div>
+                <p className="text-white font-bold text-sm">{member.name}</p>
+                <p className="text-white/50 text-xs mt-0.5">{member.role[l]}</p>
+                <span className="mt-2 px-2 py-0.5 rounded-full bg-[#e8ff00]/10 text-[#e8ff00] text-[10px] font-semibold border border-[#e8ff00]/20">
+                  {member.exp}
+                </span>
               </div>
             ))}
           </div>

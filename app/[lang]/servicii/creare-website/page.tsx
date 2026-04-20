@@ -17,12 +17,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     en: 'Professional Website Development Moldova | Powermedia',
   }
   const descs: Record<Lang, string> = {
-    ro: 'Creăm site-uri profesionale, rapide și optimizate SEO pentru afaceri din Moldova. Design modern, hosting inclus.',
-    ru: 'Создаём профессиональные, быстрые и SEO-оптимизированные сайты для бизнеса в Молдове.',
-    en: 'We create professional, fast and SEO-optimized websites for businesses. Modern design, hosting included.',
+    ro: 'Creăm site-uri profesionale, rapide și optimizate SEO pentru afaceri din Moldova și Chișinău. Design modern, hosting inclus, Google PageSpeed 90+.',
+    ru: 'Создаём профессиональные, быстрые и SEO-оптимизированные сайты для бизнеса в Молдове и Кишинёве. Современный дизайн, хостинг включён.',
+    en: 'Professional website development in Moldova — fast, SEO-optimized, mobile-first. Modern design, hosting included, PageSpeed 90+ guaranteed.',
   }
 
-  return { title: titles[lang as Lang], description: descs[lang as Lang] }
+  return {
+    title: titles[lang as Lang],
+    description: descs[lang as Lang],
+    alternates: {
+      canonical: `https://powermedia.md/${lang}/servicii/creare-website`,
+      languages: {
+        ro: 'https://powermedia.md/ro/servicii/creare-website',
+        ru: 'https://powermedia.md/ru/servicii/creare-website',
+        en: 'https://powermedia.md/en/servicii/creare-website',
+      },
+    },
+  }
 }
 
 const PAGE_DATA: Record<Lang, ServicePageData> = {
@@ -30,7 +41,7 @@ const PAGE_DATA: Record<Lang, ServicePageData> = {
     lang: 'ro',
     hero: {
       badge: 'Creare Website',
-      title: 'Site-uri care <span class="text-[#e8ff00]">vând</span> și conving',
+      title: 'Creare Website <span class="text-[#e8ff00]">Moldova</span> — Site-uri care vând',
       subtitle: 'Construim prezențe digitale complete — de la landing pages la platforme complexe. Design premium, performanță maximă, SEO integrat de la bun început.',
       cta: 'Solicită ofertă gratuită',
     },
@@ -159,7 +170,7 @@ const PAGE_DATA: Record<Lang, ServicePageData> = {
     lang: 'ru',
     hero: {
       badge: 'Создание сайта',
-      title: 'Сайты, которые <span class="text-[#e8ff00]">продают</span>',
+      title: 'Создание сайтов в <span class="text-[#e8ff00]">Молдове</span> — Сайты, которые продают',
       subtitle: 'Создаём полноценные цифровые присутствия — от лендингов до сложных платформ. Премиальный дизайн, максимальная производительность, SEO с первого дня.',
       cta: 'Получить бесплатное предложение',
     },
@@ -288,7 +299,7 @@ const PAGE_DATA: Record<Lang, ServicePageData> = {
     lang: 'en',
     hero: {
       badge: 'Website Development',
-      title: 'Websites that <span class="text-[#e8ff00]">convert</span> and grow',
+      title: 'Website Development <span class="text-[#e8ff00]">Moldova</span> — Sites that convert',
       subtitle: 'We build complete digital presences — from landing pages to complex platforms. Premium design, maximum performance, SEO integrated from day one.',
       cta: 'Get a free quote',
     },
@@ -420,5 +431,5 @@ export default async function CreareWebsitePage({ params }: PageProps) {
   if (!isValidLang(lang)) notFound()
 
   const data = PAGE_DATA[lang as Lang]
-  return <ServicePageTemplate data={data} />
+  return <ServicePageTemplate data={data} currentSlug="creare-website" />
 }

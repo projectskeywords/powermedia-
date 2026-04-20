@@ -13,7 +13,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ru: 'Реклама Google Ads в Молдове | Powermedia',
     en: 'Google Ads Advertising Moldova | Powermedia',
   }
-  return { title: titles[lang as Lang] }
+  const descs: Record<Lang, string> = {
+    ro: 'Campanii Google Ads profitabile pentru afaceri din Moldova și Chișinău. ROI garantat, audit gratuit, raportare transparentă. Gestionăm bugete de la 500 Lei/lună.',
+    ru: 'Прибыльные кампании Google Ads для бизнеса в Молдове и Кишинёве. Гарантированный ROI, бесплатный аудит, прозрачная отчётность.',
+    en: 'Profitable Google Ads campaigns for businesses in Moldova. Guaranteed ROI, free audit, transparent reporting. We manage budgets from €30/month.',
+  }
+  return {
+    title: titles[lang as Lang],
+    description: descs[lang as Lang],
+    alternates: {
+      canonical: `https://powermedia.md/${lang}/servicii/publicitate-google`,
+      languages: {
+        ro: 'https://powermedia.md/ro/servicii/publicitate-google',
+        ru: 'https://powermedia.md/ru/servicii/publicitate-google',
+        en: 'https://powermedia.md/en/servicii/publicitate-google',
+      },
+    },
+  }
 }
 
 const DATA: Record<Lang, ServicePageData> = {
@@ -21,7 +37,7 @@ const DATA: Record<Lang, ServicePageData> = {
     lang: 'ro',
     hero: {
       badge: 'Publicitate Google',
-      title: 'Campanii Google Ads cu <span class="text-[#e8ff00]">ROI maxim</span>',
+      title: 'Google Ads <span class="text-[#e8ff00]">Moldova</span> — Campanii cu ROI maxim',
       subtitle: 'Creăm și gestionăm campanii Google Ads profitabile pentru afaceri din Moldova. Plătești doar pentru clienți reali, nu pentru click-uri fără valoare.',
       cta: 'Audit gratuit al campaniilor tale',
     },
@@ -73,7 +89,7 @@ const DATA: Record<Lang, ServicePageData> = {
     lang: 'ru',
     hero: {
       badge: 'Реклама Google',
-      title: 'Кампании Google Ads с <span class="text-[#e8ff00]">максимальным ROI</span>',
+      title: 'Google Ads в <span class="text-[#e8ff00]">Молдове</span> — Максимальный ROI',
       subtitle: 'Создаём и управляем прибыльными кампаниями Google Ads для бизнеса в Молдове. Платите только за реальных клиентов, а не за бесценные клики.',
       cta: 'Бесплатный аудит ваших кампаний',
     },
@@ -178,5 +194,5 @@ const DATA: Record<Lang, ServicePageData> = {
 export default async function PublicitateGooglePage({ params }: PageProps) {
   const { lang } = await params
   if (!isValidLang(lang)) notFound()
-  return <ServicePageTemplate data={DATA[lang as Lang]} />
+  return <ServicePageTemplate data={DATA[lang as Lang]} currentSlug="publicitate-google" />
 }
