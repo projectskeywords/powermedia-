@@ -22,10 +22,18 @@ export interface MultilingualArticle {
   en: ArticleVersion
 }
 
+const CURRENT_YEAR = new Date().getFullYear()
+const CURRENT_MONTH = new Date().toLocaleString('en-US', { month: 'long' })
+
 const PROMPTS: Record<string, (topic: string) => string> = {
   ro: (topic) => `
 Ești copywriter SEO expert pentru piața din Moldova.
 Scrie un articol profesionist în ROMÂNĂ despre: "${topic}"
+
+INFORMAȚII TEMPORALE (OBLIGATORIU de respectat):
+- Anul curent este ${CURRENT_YEAR}, luna ${CURRENT_MONTH}
+- Folosește EXCLUSIV "${CURRENT_YEAR}" când menționezi anul curent — NICIODATĂ alt an
+- Tendințele, statisticile și exemplele trebuie să fie relevante pentru ${CURRENT_YEAR}
 
 CERINȚE OBLIGATORII:
 - Conține referințe specifice pieței moldovenești (legislație locală, tendințe Chișinău, exemple concrete din Moldova)
@@ -41,6 +49,11 @@ Răspunde STRICT ca JSON valid (fără markdown, fără text extra):
 Ты профессиональный SEO-копирайтер для рынка Молдовы.
 Напиши профессиональную статью на РУССКОМ о: "${topic}"
 
+ВРЕМЕННАЯ ИНФОРМАЦИЯ (ОБЯЗАТЕЛЬНО соблюдать):
+- Текущий год — ${CURRENT_YEAR}, месяц — ${CURRENT_MONTH}
+- Используй ИСКЛЮЧИТЕЛЬНО "${CURRENT_YEAR}" при упоминании текущего года — НИКОГДА другой год
+- Тренды, статистика и примеры должны быть актуальны для ${CURRENT_YEAR}
+
 ОБЯЗАТЕЛЬНЫЕ ТРЕБОВАНИЯ:
 - Включи ссылки на молдавский рынок (местное законодательство, тренды Кишинёва, конкретные молдавские примеры)
 - Формат: H1 заголовок, meta description (макс. 155 символов), 5 секций H2, минимум 800 слов
@@ -54,6 +67,11 @@ Răspunde STRICT ca JSON valid (fără markdown, fără text extra):
   en: (topic) => `
 You are a professional SEO copywriter targeting the European market.
 Write a professional article in ENGLISH about: "${topic}"
+
+TEMPORAL CONTEXT (MANDATORY):
+- The current year is ${CURRENT_YEAR}, month is ${CURRENT_MONTH}
+- Use EXCLUSIVELY "${CURRENT_YEAR}" when referring to the current year — NEVER any other year
+- Trends, statistics and examples must be relevant and accurate for ${CURRENT_YEAR}
 
 REQUIREMENTS:
 - Target European businesses (EU regulations, European digital trends, international examples)
