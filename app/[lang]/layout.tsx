@@ -19,7 +19,7 @@ export default async function LangLayout({ children, params }: LangLayoutProps) 
   return (
     <ThemeProvider>
       <Header lang={lang as Lang} t={t} />
-      <main className="flex-1 pt-16">{children}</main>
+      <div className="flex-1 pt-16">{children}</div>
       <Footer lang={lang as Lang} t={t} />
     </ThemeProvider>
   )

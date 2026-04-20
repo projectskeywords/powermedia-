@@ -9,7 +9,6 @@ interface ArticleCardProps {
   readMoreLabel: string
 }
 
-// Deterministic gradient based on article id
 function getGradient(id: string) {
   const gradients = [
     'from-violet-900/60 to-zinc-900',
@@ -25,23 +24,25 @@ function getGradient(id: string) {
 
 export default function ArticleCard({ article, lang, readMoreLabel }: ArticleCardProps) {
   const version = article[lang]
+
+  // Skip articles without a version for the current language
+  if (!version || !version.slug || !version.title) return null
+
   const image = article.images?.[0]
   const gradient = getGradient(article.id)
 
-  // First letter of title for placeholder
-  const initials = version.title
+  const initials = (version.title || '')
     .split(' ')
     .slice(0, 2)
-    .map((w) => w[0])
+    .map((w) => w?.[0] ?? '')
     .join('')
-    .toUpperCase()
+    .toUpperCase() || 'PM'
 
   return (
     <article className="group rounded-2xl overflow-hidden bg-zinc-900 border border-white/10 hover:border-white/25 transition-all hover:-translate-y-1 duration-300">
-      {/* Image or styled placeholder */}
       <Link href={`/${lang}/articole/${version.slug}`} className="block">
         <div className="relative h-52 overflow-hidden">
-          {image ? (
+          {image?.url ? (
             <>
               <Image
                 src={image.url}
@@ -69,7 +70,6 @@ export default function ArticleCard({ article, lang, readMoreLabel }: ArticleCar
       </Link>
 
       <div className="p-6">
-        {/* Keywords */}
         <div className="flex flex-wrap gap-1.5 mb-3">
           {(version.keywords ?? []).slice(0, 3).map((kw) => (
             <span
@@ -81,19 +81,16 @@ export default function ArticleCard({ article, lang, readMoreLabel }: ArticleCar
           ))}
         </div>
 
-        {/* Title */}
         <h2 className="text-white font-bold text-lg mb-2 leading-snug group-hover:text-[#e8ff00] transition-colors line-clamp-2">
           <Link href={`/${lang}/articole/${version.slug}`}>
             {version.title}
           </Link>
         </h2>
 
-        {/* Excerpt */}
         <p className="text-white/40 text-sm leading-relaxed mb-4 line-clamp-2">
           {version.metaDescription}
         </p>
 
-        {/* Footer */}
         <div className="flex items-center justify-between pt-3 border-t border-white/5">
           <time className="text-white/25 text-xs">
             {new Date(article.createdAt).toLocaleDateString(
