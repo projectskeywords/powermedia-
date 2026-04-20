@@ -83,6 +83,14 @@ export default async function ArticleDetailPage({ params }: PageProps) {
     : 'The Powermedia team transforms businesses in Moldova through complete digital solutions.'
   const ctaBtn = lang === 'ro' ? 'Solicită o consultație gratuită' : lang === 'ru' ? 'Получить бесплатную консультацию' : 'Get a free consultation'
 
+  const midCtaLabel = lang === 'ro' ? 'Ai nevoie de ajutor?' : lang === 'ru' ? 'Нужна помощь?' : 'Need help?'
+  const midCtaText = lang === 'ro'
+    ? 'Suntem la un telefon distanță — consultație gratuită.'
+    : lang === 'ru'
+    ? 'Мы на расстоянии звонка — бесплатная консультация.'
+    : 'We\'re one call away — free consultation.'
+  const callNowLabel = lang === 'ro' ? 'Sună acum' : lang === 'ru' ? 'Позвонить' : 'Call now'
+
   const wordCount = version.content.replace(/<[^>]+>/g, '').split(/\s+/).length
   const readTime = Math.ceil(wordCount / 200)
 
@@ -248,6 +256,30 @@ export default async function ArticleDetailPage({ params }: PageProps) {
             </div>
           </div>
         )}
+
+        {/* Mid-article CTA call banner */}
+        <div className="my-10 flex flex-col sm:flex-row items-center justify-between gap-4 px-6 py-5 rounded-2xl bg-gradient-to-r from-[#e8ff00]/8 to-transparent border border-[#e8ff00]/20">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#e8ff00]/15 flex items-center justify-center flex-shrink-0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#e8ff00">
+                <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.47 11.47 0 003.58.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.47 11.47 0 00.57 3.58 1 1 0 01-.25 1.02l-2.2 2.19z"/>
+              </svg>
+            </div>
+            <div>
+              <p className="text-white font-semibold text-sm">{midCtaLabel}</p>
+              <p className="text-white/50 text-sm">{midCtaText}</p>
+            </div>
+          </div>
+          <a
+            href="tel:+37368996315"
+            className="flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 bg-[#e8ff00] text-black font-bold rounded-xl text-sm hover:bg-[#c8db00] transition-colors"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.47 11.47 0 003.58.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.47 11.47 0 00.57 3.58 1 1 0 01-.25 1.02l-2.2 2.19z"/>
+            </svg>
+            {callNowLabel} · +373 68 996 315
+          </a>
+        </div>
 
         {/* Part 2 of content */}
         {contentPart2 && (
