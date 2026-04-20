@@ -82,7 +82,7 @@ const PAGE_DATA: Record<Lang, ServicePageData> = {
         },
         {
           name: 'Site Prezentare',
-          price: '800€',
+          price: '500€',
           badge: 'Popular',
           highlighted: true,
           description: 'Soluția completă pentru afaceri care vor să crească online.',
@@ -211,7 +211,7 @@ const PAGE_DATA: Record<Lang, ServicePageData> = {
         },
         {
           name: 'Сайт-визитка',
-          price: '800€',
+          price: '500€',
           badge: 'Популярно',
           highlighted: true,
           description: 'Полное решение для бизнеса, который хочет расти онлайн.',
@@ -340,7 +340,7 @@ const PAGE_DATA: Record<Lang, ServicePageData> = {
         },
         {
           name: 'Presentation Site',
-          price: '€800',
+          price: '€500',
           badge: 'Popular',
           highlighted: true,
           description: 'The complete solution for businesses that want to grow online.',

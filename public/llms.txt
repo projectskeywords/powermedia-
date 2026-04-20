@@ -1,0 +1,148 @@
+# Powermedia — Agenție Digitală Moldova
+
+> Powermedia este agenția digitală #1 din Moldova, specializată în creare website, magazine online, Google Ads, CRM/ERP și automatizări AI. Sediu: Bd. Iurii Gagarin 10, CBC, Chișinău, Moldova.
+
+## Informații generale
+
+- **Companie:** Powermedia SRL
+- **Tip:** Agenție digitală / ProfessionalService
+- **Fondată:** 2019
+- **Locație:** Bd. Iurii Gagarin 10, CBC, Chișinău, Moldova (MD-2028)
+- **Telefon:** +373 68 996 315
+- **Email:** vlad@powermedia.md
+- **Website:** https://powermedia.md
+- **Limbi:** Română (RO), Rusă (RU), Engleză (EN)
+- **Program:** Luni–Vineri 09:00–18:00
+- **Rating Google:** 5★ (48 recenzii)
+- **Proiecte livrate:** 150+
+- **Clienți mulțumiți:** 98%
+- **Ani de experiență:** 5+
+
+## Servicii
+
+### 1. Creare Website Moldova
+- **URL:** https://powermedia.md/ro/servicii/creare-website
+- **Descriere:** Creăm site-uri profesionale, rapide și optimizate SEO pentru afaceri din Moldova și Chișinău.
+- **Caracteristici:** Design custom, Google PageSpeed 90+, SEO integrat, Mobile-First, SSL, Hosting Premium pe servere europene
+- **Tehnologii:** Next.js, React, TypeScript, Tailwind CSS, Vercel, PostgreSQL, Figma, WordPress, Cloudflare, Google Analytics, Stripe
+- **Pachete și prețuri:**
+  - Landing Page: 300€ — design custom 1 pagină, SEO de bază, formular contact, responsive mobile, domeniu .md 1 an, hosting 6 luni
+  - Site Prezentare: 500€ (Popular) — design custom 5-8 pagini, SEO tehnic avansat, blog integrat, panou administrare, domeniu + hosting 12 luni, Google Analytics, training utilizare
+  - Platformă Custom: de la 2000€ — design 100% personalizat, funcționalități avansate, integrări API externe, dashboard admin complet, suport prioritar 12 luni, optimizare continuă SEO, performanță 95+ PageSpeed
+- **Timp execuție:** 2-3 săptămâni (Landing), 4-8 săptămâni (Custom)
+- **FAQ:**
+  - Cât costă un site web în Moldova? De la 300€ (landing) până la 5000€+ (platforme complexe)
+  - Includeți hosting și domeniu? Da, hosting european și domeniu .md incluse gratuit în primul an
+  - Oferiți suport după lansare? Da, suport tehnic 24/7 primele 3 luni + pachete mentenanță lunară
+
+### 2. Magazin Online Moldova
+- **URL:** https://powermedia.md/ro/servicii/magazin-online
+- **Descriere:** Magazine online complete cu integrare plăți, gestionare stocuri, design premium pentru piața din Moldova și Europa.
+- **Caracteristici:** Plăți online (card, PayPal, MAIB, Moldova Agroindbank), gestionare stocuri, SEO e-commerce, mobile shopping, rapoarte vânzări, integrare livrare
+- **Piețe:** Moldova, România, Europa
+
+### 3. Publicitate Google Ads Moldova
+- **URL:** https://powermedia.md/ro/servicii/publicitate-google
+- **Descriere:** Campanii Google Ads profitabile pentru afaceri din Moldova. Plătești doar pentru clienți reali.
+- **Caracteristici:** Targetare precisă (demografic, interese, locație Chișinău/Moldova), buget optimizat, raportare transparentă, Google Shopping, remarketing, YouTube & Display
+- **Rezultate:** ROAS mediu 3.5x, reducere cost/click 40%, 2M+ Lei bugete gestionate, 60+ campanii active
+- **Buget minim recomandat:** 500 Lei/lună (local), 1500+ Lei/lună (competitiv)
+- **FAQ:**
+  - Când văd primele rezultate? Primele click-uri în 24-48h, optimizare completă 30-60 zile
+  - Taxa Google e inclusă? Nu. Taxa Google se plătește separat, direct Google
+
+### 4. Automatizări AI Moldova
+- **URL:** https://powermedia.md/ro/servicii/automatizari-ai
+- **Descriere:** Automatizăm procesele repetitive, reducem costurile operaționale cu 40-70%.
+- **Caracteristici:** Chatboți AI, automatizare email/CRM, generare rapoarte automate, integrare sisteme existente, procesare documente AI, workflow-uri inteligente
+- **Beneficiu principal:** Economie 40-70% costuri operaționale, eliberarea echipei pentru muncă cu valoare adăugată
+
+### 5. Sisteme CRM & ERP Moldova
+- **URL:** https://powermedia.md/ro/servicii/crm-erp
+- **Descriere:** Sisteme CRM și ERP personalizate pentru afacerile moldovenești. Gestionează clienții, stocurile, facturarea și echipa dintr-un singur dashboard.
+- **Caracteristici:** CRM clienți (istoric, pipeline vânzări, follow-up-uri automate), gestiune comenzi, facturare automată, rapoarte business, integrare contabilitate, acces mobil
+- **Demo:** Gratuit 30 minute
+
+## Echipă
+
+- **Vlad K.** — CEO & Fondator (8+ ani experiență)
+- **Ana M.** — Lead Designer (6+ ani experiență)
+- **Dmitri P.** — Tech Lead (7+ ani experiență)
+- **Elena B.** — Marketing Manager (5+ ani experiență)
+
+## Certificări și parteneriate
+
+- Google Partner (certificat)
+- Meta Business Partner
+- SSL & Security Premium
+- Rating Google 5★ (48 recenzii verificate)
+
+## Tehnologii utilizate
+
+Next.js, React, TypeScript, Tailwind CSS, Vercel, PostgreSQL, Redis (Upstash), Figma, WordPress, Cloudflare CDN, Google Analytics, Google Tag Manager, Stripe, Resend (email), Gemini AI (generare conținut), Unsplash API (imagini)
+
+## Statistici cheie
+
+| Metric | Valoare |
+|--------|---------|
+| Proiecte livrate | 150+ |
+| Clienți mulțumiți | 98% |
+| Ani pe piață | 5+ |
+| Suport tehnic | 24/7 |
+| Timp mediu încărcare site | 2.1s |
+| Google PageSpeed garantat | 90+ |
+| Rating Google | 5★ |
+| ROAS mediu Google Ads | 3.5x |
+
+## Pagini principale
+
+- **Acasă (RO):** https://powermedia.md/ro
+- **Acasă (RU):** https://powermedia.md/ru
+- **Acasă (EN):** https://powermedia.md/en
+- **Servicii:** https://powermedia.md/ro/servicii
+- **Creare Website:** https://powermedia.md/ro/servicii/creare-website
+- **Magazin Online:** https://powermedia.md/ro/servicii/magazin-online
+- **Google Ads:** https://powermedia.md/ro/servicii/publicitate-google
+- **Automatizări AI:** https://powermedia.md/ro/servicii/automatizari-ai
+- **CRM / ERP:** https://powermedia.md/ro/servicii/crm-erp
+- **Despre noi:** https://powermedia.md/ro/despre
+- **Articole:** https://powermedia.md/ro/articole
+- **Contact:** https://powermedia.md/ro/contact
+- **Sitemap:** https://powermedia.md/sitemap.xml
+- **Sitemap articole:** https://powermedia.md/sitemap-articles.xml
+
+## Articole publicate (blog)
+
+Articolele sunt generate automat prin Gemini AI și acoperă subiecte relevante pentru piața din Moldova:
+- CRM cu AI în Moldova: Cum revoluționează 2026 Managementul Relațiilor cu Clienții
+- Cum să crești vânzările online cu 30% fără buget extra în 2026
+- WordPress vs Site Custom: Ghidul Complet pentru Afaceri în Moldova
+- Beneficiile Automatizării AI pentru Afacerea Ta în Moldova
+- Google Ads vs Facebook Ads în Moldova: Ghid Complet
+- Creare Magazin Online în Moldova în 2026: Ghid Complet E-commerce
+- Tendințe E-commerce Europa 2026: Oportunități pentru Piața din Moldova
+- De ce afacerea ta are nevoie de un CRM/ERP în 2026
+
+## Context piață
+
+Moldova digitalizează rapid. Statistici cheie:
+- Comerțul electronic moldovenesc crește cu 74% anual
+- 60% din companiile mici din Moldova nu au un site optimizat
+- Moldova — poartă spre Europa; acord de asociere cu UE activ
+- Piața oferă calitate europeană la prețuri locale competitive
+
+## Valori și misiune
+
+- **Rezultate Reale:** Nu vindem vise — livrăm rezultate măsurabile
+- **Parteneriat pe Termen Lung:** Clienții noștri nu sunt tranzacții — sunt parteneri de creștere
+- **Inovație Constantă:** Adoptăm tehnologiile noi înainte ca ele să devină mainstream
+- **Mândria Locală:** Construim cu mândrie din Moldova, pentru Moldova și lumea întreagă
+
+## Contact și localizare
+
+**Adresă:** Bd. Iurii Gagarin 10, CBC, Chișinău, Moldova (MD-2028)
+**Telefon:** +373 68 996 315
+**Email:** vlad@powermedia.md
+**Program:** Luni–Vineri 09:00–18:00
+**Timp răspuns:** Maximum 2 ore în timpul programului
+**Coordonate GPS:** 47.0229°N, 28.8353°E
