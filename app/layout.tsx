@@ -46,7 +46,7 @@ const localBusinessSchema = {
         'Agenție digitală din Moldova — creare website, magazine online, CRM/ERP, Google Ads și automatizări AI',
       url: 'https://powermedia.md',
       telephone: '+37368996315',
-      email: 'vlad@powermedia.md',
+      email: 'vlad@keywords.md',
       logo: {
         '@type': 'ImageObject',
         url: 'https://powermedia.md/logo.png',

@@ -82,7 +82,7 @@ export default async function ContactPage({ params }: PageProps) {
 
                 {/* Email */}
                 <a
-                  href="mailto:vlad@powermedia.md"
+                  href="mailto:vlad@keywords.md"
                   className="flex items-center gap-4 p-5 rounded-2xl bg-zinc-900 border border-white/10 hover:border-[#e8ff00]/30 transition-colors group"
                 >
                   <div className="w-12 h-12 rounded-xl bg-[#e8ff00]/10 flex items-center justify-center flex-shrink-0">
@@ -94,7 +94,7 @@ export default async function ContactPage({ params }: PageProps) {
                   <div>
                     <div className="text-white/40 text-xs uppercase tracking-wider mb-0.5">Email</div>
                     <div className="text-white font-bold group-hover:text-[#e8ff00] transition-colors">
-                      vlad@powermedia.md
+                      vlad@keywords.md
                     </div>
                   </div>
                 </a>
@@ -141,18 +141,18 @@ export default async function ContactPage({ params }: PageProps) {
             <p className="text-white/40 text-sm uppercase tracking-widest mb-4 font-semibold">{mapLabel}</p>
             <div className="rounded-2xl overflow-hidden border border-white/10" style={{ height: '380px' }}>
               <iframe
-                src="https://www.google.com/maps?q=Bd.+Iurii+Gagarin+10,+Chisinau,+Moldova&output=embed"
+                src="https://www.google.com/maps?q=powermedia.md&output=embed&z=17"
                 width="100%"
                 height="100%"
                 style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg)' }}
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="Powermedia — Bd. Iurii Gagarin 10, Chișinău"
+                title="Powermedia — Bd. Iurii Gagarin 10, Chișinău, Moldova"
               />
             </div>
             <a
-              href="https://maps.google.com/?q=Bd.+Iurii+Gagarin+10,+Chisinau,+Moldova"
+              href="https://maps.google.com/?q=powermedia.md"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 mt-3 text-white/30 hover:text-[#e8ff00] text-xs transition-colors"
