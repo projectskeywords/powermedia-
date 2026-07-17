@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Geist } from 'next/font/google'
-import Script from 'next/script'
+import ConsentGtm from '@/components/consent/ConsentGtm'
 import './globals.css'
 
 const geistSans = Geist({
@@ -165,10 +165,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <head>
-        {/* Performance: preconnect la resurse externe */}
+        {/* Performance: preconnect la resurse externe.
+            Fără preconnect către googletagmanager / google-analytics: ar deschide
+            o conexiune (deci ar dezvălui IP-ul vizitatorului) înainte de acord. */}
         <link rel="preconnect" href="https://images.unsplash.com" />
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
-        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
 
         {/* Schema.org LocalBusiness — toate paginile */}
         <script
@@ -176,25 +176,31 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
         />
 
-        {/* Google Tag Manager */}
-        <Script id="gtm-head" strategy="afterInteractive">
-          {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-NXGR45DF');`}
-        </Script>
+        {/* Google Consent Mode v2 — toate categoriile refuzate implicit.
+            Trebuie să ruleze înaintea oricărui tag Google, de aceea e script
+            inline în <head> și nu next/script. Nu face niciun request. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments)}
+window.gtag=gtag;
+gtag('consent','default',{
+  ad_storage:'denied',
+  ad_user_data:'denied',
+  ad_personalization:'denied',
+  analytics_storage:'denied',
+  functionality_storage:'granted',
+  security_storage:'granted',
+  wait_for_update:500
+});`,
+          }}
+        />
       </head>
       <body className="min-h-screen antialiased bg-zinc-950 text-white">
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-NXGR45DF"
-            height="0"
-            width="0"
-            style={{ display: 'none', visibility: 'hidden' }}
-          />
-        </noscript>
+        {/* Fără <noscript> iframe pentru GTM: s-ar încărca necondiționat,
+            fără nicio posibilitate de a cere acordul. */}
         {children}
+        <ConsentGtm />
       </body>
     </html>
   )

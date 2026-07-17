@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 /**
- * GET /api/debug?secret=powermedia-admin-2025
+ * GET /api/debug?secret=<ADMIN_SECRET>
  * Verifică starea env vars și conexiunea Redis
  */
 export async function GET(req: NextRequest) {
   const secret = req.nextUrl.searchParams.get('secret')
-  if (secret !== (process.env.ADMIN_SECRET ?? '')) {
+  const adminSecret = process.env.ADMIN_SECRET
+
+  // Fără ADMIN_SECRET configurat endpointul rămâne închis, nu deschis.
+  if (!adminSecret || secret !== adminSecret) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

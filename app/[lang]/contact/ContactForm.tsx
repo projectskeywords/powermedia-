@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import type { Lang } from '@/lib/i18n'
 
 interface ContactFormProps {
@@ -17,10 +18,41 @@ interface ContactFormProps {
   }
 }
 
+/**
+ * Textul de consimțământ. Trebuie să spună explicit în ce scop prelucrăm
+ * datele — „sunt de acord cu politica" nu e consimțământ valabil, pentru că
+ * nu indică scopul.
+ */
+const CONSENT_TEXT: Record<Lang, { before: string; link: string; after: string }> = {
+  ro: {
+    before: 'Sunt de acord ca numele, telefonul și mesajul meu să fie prelucrate de Keywords SRL pentru a primi un răspuns la această solicitare. Detalii în ',
+    link: 'Politica de confidențialitate',
+    after: '. Îmi pot retrage acordul oricând.',
+  },
+  ru: {
+    before: 'Я согласен(на) на обработку моего имени, телефона и сообщения компанией Keywords SRL для получения ответа на этот запрос. Подробности — в ',
+    link: 'Политике конфиденциальности',
+    after: '. Я могу отозвать согласие в любой момент.',
+  },
+  en: {
+    before: 'I agree that my name, phone number and message may be processed by Keywords SRL in order to receive a reply to this enquiry. Details in the ',
+    link: 'Privacy Policy',
+    after: '. I can withdraw my consent at any time.',
+  },
+}
+
+const CONSENT_ERROR: Record<Lang, string> = {
+  ro: 'Avem nevoie de acordul tău ca să îți putem răspunde.',
+  ru: 'Нам нужно ваше согласие, чтобы мы могли вам ответить.',
+  en: 'We need your consent in order to reply to you.',
+}
+
 export default function ContactForm({ lang, t }: ContactFormProps) {
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' })
+  const [consent, setConsent] = useState(false)
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
   const [phoneError, setPhoneError] = useState('')
+  const [consentError, setConsentError] = useState('')
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value } = e.target
@@ -40,16 +72,28 @@ export default function ContactForm({ lang, t }: ContactFormProps) {
       return
     }
 
+    if (!consent) {
+      setConsentError(CONSENT_ERROR[lang])
+      return
+    }
+
     setStatus('sending')
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, lang }),
+        body: JSON.stringify({
+          ...form,
+          lang,
+          consent,
+          // Momentul acordului, pentru dovada consimțământului.
+          consentAt: new Date().toISOString(),
+        }),
       })
       if (!res.ok) throw new Error('Send failed')
       setStatus('success')
       setForm({ name: '', email: '', phone: '', message: '' })
+      setConsent(false)
     } catch {
       setStatus('error')
     }
@@ -142,6 +186,41 @@ export default function ContactForm({ lang, t }: ContactFormProps) {
          lang === 'ru' ? 'Поля, отмеченные *, обязательны.' :
          'Fields marked with * are required.'}
       </p>
+
+      {/* Consimțământ — nebifat implicit, obligatoriu. O căsuță prebifată nu
+          reprezintă consimțământ, pentru că lipsește acțiunea vizitatorului. */}
+      <div className="pt-2">
+        <label className="flex gap-3 cursor-pointer group">
+          <input
+            type="checkbox"
+            checked={consent}
+            onChange={(e) => {
+              setConsent(e.target.checked)
+              setConsentError('')
+            }}
+            aria-describedby={consentError ? 'consent-error' : undefined}
+            className={`mt-0.5 h-4 w-4 flex-shrink-0 rounded accent-[#e8ff00] cursor-pointer ${
+              consentError ? 'outline outline-1 outline-red-500/60' : ''
+            }`}
+          />
+          <span className="text-white/40 text-xs leading-relaxed group-hover:text-white/60 transition-colors">
+            {CONSENT_TEXT[lang].before}
+            <Link
+              href={`/${lang}/confidentialitate`}
+              className="text-[#e8ff00] underline underline-offset-2 hover:text-[#c8db00]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {CONSENT_TEXT[lang].link}
+            </Link>
+            {CONSENT_TEXT[lang].after}
+          </span>
+        </label>
+        {consentError && (
+          <p id="consent-error" className="text-red-400 text-xs mt-2">
+            {consentError}
+          </p>
+        )}
+      </div>
 
       {status === 'error' && (
         <p className="text-red-400 text-sm">{t.error}</p>

@@ -12,7 +12,7 @@ interface FooterProps {
       ads: { name: string }
       ai: { name: string }
     }
-    footer: { tagline: string; rights: string; privacy: string; terms: string }
+    footer: { tagline: string; rights: string; privacy: string; terms: string; cookies: string }
   }
 }
 
@@ -138,6 +138,12 @@ export default function Footer({ lang, t }: FooterProps) {
               className="text-white/30 hover:text-white/60 text-xs transition-colors"
             >
               {t.footer.terms}
+            </Link>
+            <Link
+              href={`/${lang}/cookies`}
+              className="text-white/30 hover:text-white/60 text-xs transition-colors"
+            >
+              {t.footer.cookies}
             </Link>
           </div>
         </div>

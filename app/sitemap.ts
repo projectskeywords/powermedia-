@@ -14,7 +14,20 @@ const STATIC_PAGES = [
   '/servicii/publicitate-google',
   '/servicii/automatizari-ai',
   '/articole',
+  '/confidentialitate',
+  '/termeni',
+  '/cookies',
 ]
+
+/** Paginile legale se indexează, dar nu concurează cu cele comerciale. */
+const LEGAL_PAGES = new Set(['/confidentialitate', '/termeni', '/cookies'])
+
+function priorityFor(page: string): number {
+  if (page === '') return 1
+  if (LEGAL_PAGES.has(page)) return 0.3
+  if (page.startsWith('/servicii/')) return 0.8
+  return 0.7
+}
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = []
@@ -24,8 +37,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       entries.push({
         url: `${SITE_URL}/${lang}${page}`,
         lastModified: new Date(),
-        changeFrequency: page === '' ? 'weekly' : 'monthly',
-        priority: page === '' ? 1 : page.startsWith('/servicii/') ? 0.8 : 0.7,
+        changeFrequency: page === '' ? 'weekly' : LEGAL_PAGES.has(page) ? 'yearly' : 'monthly',
+        priority: priorityFor(page),
         alternates: {
           languages: Object.fromEntries(
             LANGS.map((l) => [l, `${SITE_URL}/${l}${page}`])

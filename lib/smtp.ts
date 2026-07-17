@@ -11,9 +11,34 @@ interface ContactEmailData {
   phone?: string
   message: string
   lang: string
+  /** Momentul bifării, raportat de browser. Orientativ. */
+  consentAt?: string
+  /** Momentul primirii pe server. Aceasta este dovada. */
+  consentRecordedAt?: string
+}
+
+/**
+ * Escapează conținutul introdus de vizitator înainte de a-l pune în HTML.
+ *
+ * Fără asta, oricine poate injecta markup în e-mailurile pe care le primim —
+ * linkuri false, formatare care ascunde textul real, imagini de urmărire.
+ */
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
 }
 
 function buildHtml(data: ContactEmailData): string {
+  const name = escapeHtml(data.name)
+  const phone = data.phone ? escapeHtml(data.phone) : ''
+  const email = data.email ? escapeHtml(data.email) : ''
+  const message = escapeHtml(data.message)
+  const lang = escapeHtml(data.lang.toUpperCase())
+
   return `<!DOCTYPE html>
 <html>
 <body style="font-family:Arial,sans-serif;color:#333;max-width:600px;margin:0 auto;padding:20px;">
@@ -24,30 +49,56 @@ function buildHtml(data: ContactEmailData): string {
   <table style="width:100%;border-collapse:collapse;">
     <tr>
       <td style="padding:12px;border-bottom:1px solid #eee;font-weight:bold;width:120px;">Nume:</td>
-      <td style="padding:12px;border-bottom:1px solid #eee;">${data.name}</td>
+      <td style="padding:12px;border-bottom:1px solid #eee;">${name}</td>
     </tr>
-    ${data.phone ? `<tr>
+    ${phone ? `<tr>
       <td style="padding:12px;border-bottom:1px solid #eee;font-weight:bold;">Telefon:</td>
-      <td style="padding:12px;border-bottom:1px solid #eee;">${data.phone}</td>
+      <td style="padding:12px;border-bottom:1px solid #eee;">${phone}</td>
     </tr>` : ''}
-    ${data.email ? `<tr>
+    ${email ? `<tr>
       <td style="padding:12px;border-bottom:1px solid #eee;font-weight:bold;">Email:</td>
-      <td style="padding:12px;border-bottom:1px solid #eee;"><a href="mailto:${data.email}">${data.email}</a></td>
+      <td style="padding:12px;border-bottom:1px solid #eee;"><a href="mailto:${encodeURIComponent(data.email)}">${email}</a></td>
     </tr>` : ''}
     <tr>
       <td style="padding:12px;border-bottom:1px solid #eee;font-weight:bold;">Limbă:</td>
-      <td style="padding:12px;border-bottom:1px solid #eee;">${data.lang.toUpperCase()}</td>
+      <td style="padding:12px;border-bottom:1px solid #eee;">${lang}</td>
     </tr>
   </table>
   <div style="margin-top:24px;padding:20px;background:#f9f9f9;border-radius:8px;border-left:4px solid #e8ff00;">
     <h3 style="margin:0 0 12px;">Mesaj:</h3>
-    <p style="margin:0;white-space:pre-wrap;">${data.message}</p>
+    <p style="margin:0;white-space:pre-wrap;">${message}</p>
+  </div>
+  <div style="margin-top:16px;padding:16px;background:#f4f4f4;border-radius:8px;">
+    <p style="margin:0;color:#555;font-size:12px;">
+      <strong>Consimțământ pentru prelucrarea datelor:</strong> acordat prin bifarea
+      căsuței din formular.<br>
+      Înregistrat pe server: ${escapeHtml(data.consentRecordedAt ?? '-')}<br>
+      Raportat de browser: ${escapeHtml(data.consentAt ?? '-')}
+    </p>
+    <p style="margin:8px 0 0;color:#888;font-size:11px;">
+      Păstrează acest e-mail: constituie dovada consimțământului (Legea nr. 195/2024).
+    </p>
   </div>
   <p style="color:#888;font-size:12px;margin-top:24px;">
     Trimis de pe <a href="https://powermedia.md">powermedia.md</a>
   </p>
 </body>
 </html>`
+}
+
+function buildText(data: ContactEmailData): string {
+  return [
+    `De la: ${data.name}`,
+    `Telefon: ${data.phone ?? '-'}`,
+    `Email: ${data.email || '-'}`,
+    '',
+    data.message,
+    '',
+    '--',
+    'Consimțământ acordat prin bifarea căsuței din formular.',
+    `Înregistrat pe server: ${data.consentRecordedAt ?? '-'}`,
+    `Raportat de browser: ${data.consentAt ?? '-'}`,
+  ].join('\n')
 }
 
 async function sendViaResend(data: ContactEmailData): Promise<void> {
@@ -66,7 +117,7 @@ async function sendViaResend(data: ContactEmailData): Promise<void> {
       reply_to: data.email || undefined,
       subject: `[Powermedia] Mesaj nou de la ${data.name}`,
       html: buildHtml(data),
-      text: `De la: ${data.name}\nTelefon: ${data.phone ?? '-'}\nEmail: ${data.email || '-'}\n\n${data.message}`,
+      text: buildText(data),
     }),
   })
 
@@ -74,8 +125,6 @@ async function sendViaResend(data: ContactEmailData): Promise<void> {
     const err = await res.text()
     throw new Error(`Resend error ${res.status}: ${err}`)
   }
-
-  console.log('[Email] Sent via Resend ✅')
 }
 
 async function sendViaSmtp(data: ContactEmailData): Promise<void> {
@@ -91,7 +140,10 @@ async function sendViaSmtp(data: ContactEmailData): Promise<void> {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
     },
-    tls: { rejectUnauthorized: false },
+    // Certificatul serverului SMTP se verifică. Fără verificare, datele din
+    // formular (nume, telefon, mesaj) pot fi interceptate printr-un certificat
+    // fals — exact contrariul securității prelucrării cerute de lege.
+    tls: { rejectUnauthorized: true },
     connectionTimeout: 10000,
     socketTimeout: 15000,
   })
@@ -102,10 +154,8 @@ async function sendViaSmtp(data: ContactEmailData): Promise<void> {
     replyTo: data.email || undefined,
     subject: `[Powermedia] Mesaj nou de la ${data.name}`,
     html: buildHtml(data),
-    text: `De la: ${data.name}\nTelefon: ${data.phone ?? '-'}\nEmail: ${data.email || '-'}\n\n${data.message}`,
+    text: buildText(data),
   })
-
-  console.log('[Email] Sent via SMTP ✅')
 }
 
 export async function sendContactEmail(data: ContactEmailData): Promise<void> {
