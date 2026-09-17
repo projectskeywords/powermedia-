@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import type { Lang } from '@/lib/i18n'
+import { COMPANY } from '@/lib/company'
 
 interface ContactFormProps {
   lang: Lang
@@ -25,17 +26,17 @@ interface ContactFormProps {
  */
 const CONSENT_TEXT: Record<Lang, { before: string; link: string; after: string }> = {
   ro: {
-    before: 'Sunt de acord ca numele, telefonul și mesajul meu să fie prelucrate de Keywords SRL pentru a primi un răspuns la această solicitare. Detalii în ',
+    before: `Sunt de acord ca numele, telefonul și mesajul meu să fie prelucrate de ${COMPANY.legalName} pentru a primi un răspuns la această solicitare. Detalii în `,
     link: 'Politica de confidențialitate',
     after: '. Îmi pot retrage acordul oricând.',
   },
   ru: {
-    before: 'Я согласен(на) на обработку моего имени, телефона и сообщения компанией Keywords SRL для получения ответа на этот запрос. Подробности — в ',
+    before: `Я согласен(на) на обработку моего имени, телефона и сообщения компанией ${COMPANY.legalName} для получения ответа на этот запрос. Подробности — в `,
     link: 'Политике конфиденциальности',
     after: '. Я могу отозвать согласие в любой момент.',
   },
   en: {
-    before: 'I agree that my name, phone number and message may be processed by Keywords SRL in order to receive a reply to this enquiry. Details in the ',
+    before: `I agree that my name, phone number and message may be processed by ${COMPANY.legalName} in order to receive a reply to this enquiry. Details in the `,
     link: 'Privacy Policy',
     after: '. I can withdraw my consent at any time.',
   },

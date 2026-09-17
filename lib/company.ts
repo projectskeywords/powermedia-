@@ -5,9 +5,9 @@
  * fiecare traducere în parte, unde ar rămâne inevitabil desincronizate.
  */
 export const COMPANY = {
-  legalName: 'Keywords SRL',
+  legalName: 'OUTBOX IT SRL',
   brand: 'Powermedia',
-  idno: '1022600016037',
+  idno: '1025600027689',
   /** Adresa juridică din Registrul de stat. */
   registeredAddress: 'MD-6526, r-l Anenii Noi, s. Mereni, str. Dumbravelor 88',
   /** Adresa de lucru / corespondență. */

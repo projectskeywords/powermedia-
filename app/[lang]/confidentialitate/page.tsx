@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { isValidLang, type Lang } from '@/lib/i18n'
-import { LEGAL_LAST_UPDATED } from '@/lib/company'
+import { COMPANY, LEGAL_LAST_UPDATED } from '@/lib/company'
 import LegalDocument from '@/components/legal/LegalDocument'
 import { PRIVACY_DOC } from '@/content/legal/privacy'
 
@@ -17,9 +17,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     en: 'Privacy Policy | Powermedia',
   }
   const descs: Record<Lang, string> = {
-    ro: 'Cum colectează, folosește și protejează Keywords SRL datele tale cu caracter personal, conform Legii nr. 195/2024 a Republicii Moldova.',
-    ru: 'Как Keywords SRL собирает, использует и защищает ваши персональные данные согласно Закону № 195/2024 Республики Молдова.',
-    en: 'How Keywords SRL collects, uses and protects your personal data, under Law no. 195/2024 of the Republic of Moldova.',
+    ro: `Cum colectează, folosește și protejează ${COMPANY.legalName} datele tale cu caracter personal, conform Legii nr. 195/2024 a Republicii Moldova.`,
+    ru: `Как ${COMPANY.legalName} собирает, использует и защищает ваши персональные данные согласно Закону № 195/2024 Республики Молдова.`,
+    en: `How ${COMPANY.legalName} collects, uses and protects your personal data, under Law no. 195/2024 of the Republic of Moldova.`,
   }
 
   return {

@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { isValidLang, type Lang } from '@/lib/i18n'
-import { LEGAL_LAST_UPDATED } from '@/lib/company'
+import { COMPANY, LEGAL_LAST_UPDATED } from '@/lib/company'
 import LegalDocument from '@/components/legal/LegalDocument'
 import { TERMS_DOC } from '@/content/legal/terms'
 
@@ -17,9 +17,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     en: 'Terms and Conditions | Powermedia',
   }
   const descs: Record<Lang, string> = {
-    ro: 'Regulile de utilizare a site-ului powermedia.md, operat de Keywords SRL.',
-    ru: 'Правила пользования сайтом powermedia.md, управляемым Keywords SRL.',
-    en: 'The rules for using the powermedia.md website, operated by Keywords SRL.',
+    ro: `Regulile de utilizare a site-ului powermedia.md, operat de ${COMPANY.legalName}.`,
+    ru: `Правила пользования сайтом powermedia.md, управляемым ${COMPANY.legalName}.`,
+    en: `The rules for using the powermedia.md website, operated by ${COMPANY.legalName}.`,
   }
 
   return {
