@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { generateMultilingualArticle } from '@/lib/gemini'
 import { searchImages } from '@/lib/unsplash'
 import { buildInternalLinks } from '@/lib/interlinking'
-import { saveArticle, getAllArticles } from '@/lib/articles-db'
+import { saveArticle, getArticleSummaries } from '@/lib/articles-db'
+import { isAdminRequest, unauthorized } from '@/lib/admin-auth'
 import { submitUrlsToGoogle } from '@/lib/google-indexing'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://powermedia.md'
@@ -33,6 +34,8 @@ async function submitToIndexNow(urls: string[]): Promise<void> {
 }
 
 export async function POST(req: NextRequest) {
+  if (!isAdminRequest(req)) return unauthorized()
+
   try {
     const body = await req.json() as { topic?: string }
     const { topic } = body
@@ -54,7 +57,7 @@ export async function POST(req: NextRequest) {
     const images = await searchImages(simpleQuery, 3).catch(() => [])
 
     // Get related articles for interlinking
-    const existingArticles = (await getAllArticles()).slice(0, 5).map((a) => ({
+    const existingArticles = (await getArticleSummaries()).slice(0, 5).map((a) => ({
       ro: { slug: a.ro.slug, title: a.ro.title },
       ru: { slug: a.ru.slug, title: a.ru.title },
       en: { slug: a.en.slug, title: a.en.title },

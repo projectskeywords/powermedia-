@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { getAllArticles } from '@/lib/articles-db'
+import { getArticleById } from '@/lib/articles-db'
 import AdminShell from '../../AdminShell'
 import ArticleEditor from './ArticleEditor'
 
@@ -11,8 +11,7 @@ export const dynamic = 'force-dynamic'
 
 export default async function EditArticlePage({ params }: PageProps) {
   const { id } = await params
-  const articles = await getAllArticles()
-  const article = articles.find((a) => a.id === id)
+  const article = await getArticleById(id)
 
   if (!article) notFound()
 

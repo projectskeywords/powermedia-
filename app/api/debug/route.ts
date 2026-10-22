@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { redisPipeline } from '@/lib/upstash'
 
 /**
  * GET /api/debug?secret=<ADMIN_SECRET>
@@ -35,41 +36,27 @@ export async function GET(req: NextRequest) {
     },
   }
 
-  // Test Redis connection
-  if (upstashUrl && upstashToken) {
-    try {
-      const res = await fetch(`${upstashUrl}/pipeline`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${upstashToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify([['GET', 'articles']]),
-        cache: 'no-store',
-      })
-      const data = await res.json() as Array<{ result: string | null }>
-      const raw = data[0]?.result
-
-      let articleCount = 0
-      if (raw) {
-        try {
-          const parsed = JSON.parse(raw)
-          const arr = typeof parsed === 'string' ? JSON.parse(parsed) : parsed
-          articleCount = Array.isArray(arr) ? arr.length : 0
-        } catch { /* ignore */ }
-      }
-
-      result.redis = {
-        status: res.status,
-        ok: res.ok,
-        hasData: !!raw,
-        articleCount,
-      }
-    } catch (e) {
-      result.redis = { error: String(e) }
+  // Test Redis connection — reads only key sizes, never the article content
+  try {
+    const [indexRaw, indexBytes, legacyBytes] = await redisPipeline([
+      ['GET', 'articles:index'],
+      ['STRLEN', 'articles:index'],
+      ['STRLEN', 'articles'],
+    ])
+    let articleCount = 0
+    if (indexRaw != null) {
+      const index = JSON.parse(String(indexRaw))
+      articleCount = Array.isArray(index) ? index.length : 0
     }
-  } else {
-    result.redis = { skipped: 'env vars missing' }
+    result.redis = {
+      ok: true,
+      migrated: indexRaw != null,
+      articleCount,
+      indexBytes,
+      legacyBlobBytes: legacyBytes,
+    }
+  } catch (e) {
+    result.redis = { error: String(e) }
   }
 
   return NextResponse.json(result)

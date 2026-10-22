@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { isValidLang, type Lang } from '@/lib/i18n'
-import { getArticleBySlug, getAllArticles } from '@/lib/articles-db'
+import { getArticleBySlug } from '@/lib/articles-db'
 import ArticleLangSwitcher from '@/components/blog/ArticleLangSwitcher'
 
 // Dynamic — articles are stored in Redis and change at runtime

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getAllArticles } from '@/lib/articles-db'
+import { getArticleSummaries } from '@/lib/articles-db'
 
 export const dynamic = 'force-dynamic'
 
@@ -7,7 +7,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://powermedia.md'
 const LANGS = ['ro', 'ru', 'en'] as const
 
 export async function GET() {
-  const articles = await getAllArticles()
+  const articles = await getArticleSummaries()
 
   const urls = articles
     .flatMap((article) =>

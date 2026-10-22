@@ -1,12 +1,12 @@
 import Link from 'next/link'
-import { getAllArticles } from '@/lib/articles-db'
+import { getArticleSummaries } from '@/lib/articles-db'
 import AdminShell from '../AdminShell'
 import DeleteButton from './DeleteButton'
 
 export const dynamic = 'force-dynamic'
 
 export default async function DashboardPage() {
-  const articles = await getAllArticles()
+  const articles = await getArticleSummaries()
 
   return (
     <AdminShell>

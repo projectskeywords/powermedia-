@@ -1,10 +1,10 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import type { StoredArticle } from '@/lib/articles-db'
+import type { ArticleSummary } from '@/lib/articles-db'
 import type { Lang } from '@/lib/i18n'
 
 interface ArticleCardProps {
-  article: StoredArticle
+  article: ArticleSummary
   lang: Lang
   readMoreLabel: string
 }
@@ -28,7 +28,7 @@ export default function ArticleCard({ article, lang, readMoreLabel }: ArticleCar
   // Skip articles without a version for the current language
   if (!version || !version.slug || !version.title) return null
 
-  const image = article.images?.[0]
+  const image = article.image
   const gradient = getGradient(article.id)
 
   const initials = (version.title || '')

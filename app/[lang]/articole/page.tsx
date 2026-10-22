@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { getMessages, isValidLang, type Lang } from '@/lib/i18n'
-import { getAllArticles } from '@/lib/articles-db'
+import { getArticleSummaries, type ArticleSummary } from '@/lib/articles-db'
 import ArticleCard from '@/components/blog/ArticleCard'
 
 export const dynamic = 'force-dynamic'
@@ -20,7 +20,12 @@ export default async function ArticolePage({ params }: PageProps) {
   if (!isValidLang(lang)) notFound()
 
   const t = getMessages(lang as Lang)
-  const articles = await getAllArticles()
+  let articles: ArticleSummary[] = []
+  try {
+    articles = await getArticleSummaries()
+  } catch (error) {
+    console.error('[articole] failed to load articles:', error)
+  }
 
   return (
     <main className="bg-black min-h-screen">
@@ -38,15 +43,9 @@ export default async function ArticolePage({ params }: PageProps) {
           {articles.length === 0 ? (
             <div className="text-center py-24">
               <div className="text-6xl mb-4">📝</div>
-              <p className="text-white/40 text-xl mb-8">
+              <p className="text-white/40 text-xl">
                 {lang === 'ro' ? 'Nu există articole încă.' : lang === 'ru' ? 'Статей пока нет.' : 'No articles yet.'}
               </p>
-              <a
-                href={`/api/articles/generate`}
-                className="px-6 py-3 bg-[#e8ff00] text-black font-bold rounded-xl hover:bg-[#c8db00] transition-colors"
-              >
-                {t.blog.generate}
-              </a>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

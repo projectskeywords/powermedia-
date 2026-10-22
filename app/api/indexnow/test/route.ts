@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getAllArticles } from '@/lib/articles-db'
+import { getArticleSummaries } from '@/lib/articles-db'
 import { submitUrlsToGoogle } from '@/lib/google-indexing'
 
 /**
@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
   }
 
   // 2. Colectează URL-urile articolelor
-  const articles = await getAllArticles()
+  const articles = await getArticleSummaries()
   const urls: string[] = []
   for (const a of articles) {
     if (a.ro?.slug) urls.push(`${SITE_URL}/ro/articole/${a.ro.slug}`)

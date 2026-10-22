@@ -1,10 +1,13 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { getAllArticles, updateArticle } from '@/lib/articles-db'
 import { searchImages } from '@/lib/unsplash'
+import { isAdminRequest, unauthorized } from '@/lib/admin-auth'
 
 // One-time endpoint to add images to articles that have empty images array
 // Call: POST /api/articles/fix-images
-export async function POST() {
+export async function POST(req: NextRequest) {
+  if (!isAdminRequest(req)) return unauthorized()
+
   try {
     const articles = await getAllArticles()
     const fixed: string[] = []

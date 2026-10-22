@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server'
-import { getAllArticles } from '@/lib/articles-db'
+import { getArticleSummaries } from '@/lib/articles-db'
 
 export async function GET() {
   try {
-    const articles = await getAllArticles()
+    const articles = await getArticleSummaries()
     return NextResponse.json({ articles })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error'

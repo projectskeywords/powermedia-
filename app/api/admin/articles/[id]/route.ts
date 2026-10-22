@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getAllArticles, updateArticle, deleteArticle, type StoredArticle } from '@/lib/articles-db'
+import { updateArticle, deleteArticle, type StoredArticle } from '@/lib/articles-db'
+import { isAdminRequest, unauthorized } from '@/lib/admin-auth'
 
 interface RouteContext {
   params: Promise<{ id: string }>
@@ -7,6 +8,8 @@ interface RouteContext {
 
 // PATCH /api/admin/articles/[id] — update article fields
 export async function PATCH(req: NextRequest, ctx: RouteContext) {
+  if (!isAdminRequest(req)) return unauthorized()
+
   const { id } = await ctx.params
   const updates = await req.json() as Partial<StoredArticle>
 
@@ -19,7 +22,9 @@ export async function PATCH(req: NextRequest, ctx: RouteContext) {
 }
 
 // DELETE /api/admin/articles/[id] — remove article
-export async function DELETE(_req: NextRequest, ctx: RouteContext) {
+export async function DELETE(req: NextRequest, ctx: RouteContext) {
+  if (!isAdminRequest(req)) return unauthorized()
+
   const { id } = await ctx.params
 
   const ok = await deleteArticle(id)
