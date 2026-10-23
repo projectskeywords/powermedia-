@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { redisPipeline } from '@/lib/upstash'
+import { query } from '@/lib/db'
 
 /**
  * GET /api/debug?secret=<ADMIN_SECRET>
- * Verifică starea env vars și conexiunea Redis
+ * Verifică starea env vars și conexiunea la baza de date (Neon)
  */
 export async function GET(req: NextRequest) {
   const secret = req.nextUrl.searchParams.get('secret')
@@ -14,8 +14,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const upstashUrl = (process.env.UPSTASH_REDIS_REST_URL ?? '').trim()
-  const upstashToken = (process.env.UPSTASH_REDIS_REST_TOKEN ?? '').trim()
+  const databaseUrl = (process.env.DATABASE_URL ?? '').trim()
   const smtpHost = process.env.SMTP_HOST ?? ''
   const smtpUser = process.env.SMTP_USER ?? ''
   const smtpPass = process.env.SMTP_PASS ?? ''
@@ -25,8 +24,7 @@ export async function GET(req: NextRequest) {
 
   const result: Record<string, unknown> = {
     env: {
-      UPSTASH_REDIS_REST_URL: upstashUrl ? `✅ set (${upstashUrl.substring(0, 30)}...)` : '❌ MISSING',
-      UPSTASH_REDIS_REST_TOKEN: upstashToken ? `✅ set (length: ${upstashToken.length})` : '❌ MISSING',
+      DATABASE_URL: databaseUrl ? `✅ set (host: ${safeHost(databaseUrl)})` : '❌ MISSING',
       SMTP_HOST: smtpHost || '❌ MISSING',
       SMTP_PORT: smtpPort || '❌ MISSING',
       SMTP_USER: smtpUser || '❌ MISSING',
@@ -36,28 +34,23 @@ export async function GET(req: NextRequest) {
     },
   }
 
-  // Test Redis connection — reads only key sizes, never the article content
+  // Test database connection
   try {
-    const [indexRaw, indexBytes, legacyBytes] = await redisPipeline([
-      ['GET', 'articles:index'],
-      ['STRLEN', 'articles:index'],
-      ['STRLEN', 'articles'],
-    ])
-    let articleCount = 0
-    if (indexRaw != null) {
-      const index = JSON.parse(String(indexRaw))
-      articleCount = Array.isArray(index) ? index.length : 0
-    }
-    result.redis = {
-      ok: true,
-      migrated: indexRaw != null,
-      articleCount,
-      indexBytes,
-      legacyBlobBytes: legacyBytes,
-    }
+    const [row] = await query<{ count: number; bytes: number }>(
+      `SELECT count(*)::int AS count, coalesce(sum(pg_column_size(t.*)), 0)::int AS bytes FROM articles t`
+    )
+    result.database = { ok: true, articleCount: row.count, tableBytes: row.bytes }
   } catch (e) {
-    result.redis = { error: String(e) }
+    result.database = { error: String(e) }
   }
 
   return NextResponse.json(result)
+}
+
+function safeHost(url: string): string {
+  try {
+    return new URL(url).hostname
+  } catch {
+    return 'invalid URL'
+  }
 }
